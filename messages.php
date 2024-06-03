@@ -338,6 +338,25 @@
 					}
 				}
 				
+				if (preg_match('/^add_dick_name\s(.*)$/siu', $cmd, $cmd_found)) {
+					if ($from_id == __('@admin_id@')) {
+						$dickName = trim($cmd_found[1]);
+						
+						WL_DB_Insert('dick_names', array(
+							'name' => $dickName
+						));
+						
+						_vkApi_messages_Send($peer_id, load_tpl('admin_add_dick_name', array(
+							'USERNAME' => $userName,
+							'DICKNAME' => $dickName
+						)));
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));							
+					}
+				}
+				
 				//if ($cmd == 'тест') {
 				//	$msg = _vkApi_messages_Send($peer_id, 'хуй');
 				//	_vkApi_messages_Pin($peer_id, $msg[0]['conversation_message_id']);
