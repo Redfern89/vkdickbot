@@ -357,7 +357,7 @@
 			else $text = sprintf('%d. %s %s', $metrPos, $dicks[$i]['first_name'], $dicks[$i]['last_name']);
 
 			imagettftext($img, (int)__('@photo_top_font_size@'), 0, $textX, $textY, 0x00, __('@graph_font@'), $text);
-			imagettftext($img, (int)__('@photo_top_font_size@') -2, 0, $textX, $textY + __('@photo_top_font_size@') +5, 0x9f9f9f, __('@graph_font@'), getMetr($dicks[$i]['len']));
+			imagettftext($img, (int)__('@photo_top_font_size@') -2, 0, $textX, $textY + (int)__('@photo_top_font_size@') +5, 0x9f9f9f, __('@graph_font@'), getMetr($dicks[$i]['len']));
 
 			$pbX1 = $textX;
 			$pbY1 = $textY + 30;
