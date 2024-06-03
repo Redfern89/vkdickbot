@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 03 2024 г., 14:20
+-- Время создания: Июн 03 2024 г., 17:32
 -- Версия сервера: 8.0.36-0ubuntu0.22.04.1
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -107,7 +107,8 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (30, 'пипитр'),
 (31, 'коршун'),
 (32, 'энерджайзер'),
-(33, 'петушок');
+(33, 'петушок'),
+(34, 'писюнчик');
 
 -- --------------------------------------------------------
 
@@ -136,11 +137,11 @@ INSERT INTO `globals` (`id`, `param`, `value`) VALUES
 (8, 'peer_probe_start', '1'),
 (9, 'peer_probe_end', '15'),
 (10, 'cron_work', 'false'),
-(11, 'vkapi_access_token', 'vk1.a.R_FDJAlI5GOW3pNpUsrQfVps-WndrsKs8-0PuMspbsEuKhb3fTlgOpd-lg4XStsYZS-qy4y4vECQzaazzHPJeUHEzLuSbjP-b1wu1lCQbr-Wd1Svk8BQCEJaFOnssbtz5sfdBlaSlkT654-E9X-wDptj_EYNaAcC_C7BaLCIaSSKRvhbIfWhPJfgjF-Gll_mobPJFXcBlxwG1NS4dH9PMQ'),
+(11, 'vkapi_access_token', ''),
 (12, 'vkapi_version', '5.131'),
-(13, 'vkapi_secret_key', 'kCFdl8UpZwGdvc5VbqXApf3qpeHicf2A'),
-(14, 'vkapi_confirmation_token', '91c473be'),
-(15, 'admin_id', '220887949'),
+(13, 'vkapi_secret_key', ''),
+(14, 'vkapi_confirmation_token', ''),
+(15, 'admin_id', ''),
 (16, 'start_luck_cnt', '5'),
 (17, 'stat_graph_cnt', '40'),
 (18, 'graph_w', '1250'),
@@ -1261,7 +1262,8 @@ INSERT INTO `small_dick_names` (`id`, `name`) VALUES
 (5, 'отросток'),
 (6, 'пупсик'),
 (7, 'малыш'),
-(8, 'петушок');
+(8, 'петушок'),
+(9, 'писюнчик');
 
 --
 -- Индексы сохранённых таблиц
@@ -1334,7 +1336,7 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`
@@ -1358,7 +1360,7 @@ ALTER TABLE `peers`
 -- AUTO_INCREMENT для таблицы `small_dick_names`
 --
 ALTER TABLE `small_dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
