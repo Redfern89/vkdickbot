@@ -266,6 +266,30 @@
 					}
 				}
 
+				if (preg_match('/^сброс\s\[id(\d+).*?\]/siu', $cmd, $cmd_found)) {
+					if ($from_id == __('@admin_id@')) {
+						if (isset($cmd_found[1])) {
+							$id = $cmd_found[1];
+							WL_DB_Update('dicks', array('metr_available' => time()), array(['vkid', '=', $id]));
+							$dickData = getDick($id);
+
+							if (!empty($dickData['nick_name'])) {
+								$userName = sprintf('[id%d|%s]', $dickData['vkid'], $dickData['nick_name']);
+							} else {
+								$userName = sprintf('[id%d|%s]', $dickData['vkid'], $dickData['first_name']);
+							}
+
+							_vkApi_messages_Send($peer_id, load_tpl('admin_reset_counter', array(
+								'USERNAME' => $userName
+							)));
+						}
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));						
+					}
+				}
+
 				if (preg_match('/^(прибавить|убавить)\s\[id(\d+).*?\]\s(\d+)$/siu', $cmd, $cmd_found)) {
 					if ($from_id == __('@admin_id@')) {
 						if (isset($cmd_found[1])) {

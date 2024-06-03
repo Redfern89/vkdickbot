@@ -27,5 +27,39 @@
 			__redirect('/setup?step=mysql&fail');
 		}
 	}
-
+	
+	
+	if ($act == 'dir_setup') {
+		$docroot = @$_POST['docroot'];
+		try {
+			$errors = array();
+			if (is_writable($docroot)) {				
+				$dirs = ['/logs', '/members/50', '/members/100', '/members/200', '/stats_graphs'];
+				foreach ($dirs as $dir) {
+					$directory = $docroot . $dir;
+					if (!file_exists($directory)) {
+						if (!mkdir($directory, 0777, true)) {
+							$errors[] = 'Не возможно создать директорию ' . $directory;
+						}
+					} else {
+						$errors[] = 'Директория <b>' . $directory . '</b> уже существует';
+					}
+				}
+				if (!empty($errors)) {
+					$_SESSION['dir_error'] = implode('<br />', $errors);
+					__redirect('/setup?step=dir&fail');
+				} else {
+					
+				}
+				
+			} else {
+				$_SESSION['dir_error'] = 'Не возможно создать директории';
+				__redirect('/setup?step=dir&fail');
+			}
+		} catch (Exception $e) {
+			$_SESSION['dir_errno'] = $e -> getCode();;
+			$_SESSION['dir_error'] = $e -> getMessage();
+			__redirect('/setup?step=dir&fail');			
+		}
+	}
 ?>

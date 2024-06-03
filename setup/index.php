@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php 
+	session_start();
+	define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']);
+	$step = @$_GET['step'];
+	$step = (!empty($step)) ? $step : 'mysql';
+	$file = DOCROOT . "/setup/section.$step.php";
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,54 +15,13 @@
 </head>
 <body>
 	<div class="bg-dark text-white p-2 fw-bold text-center">Мастер установки и настройки</div>
-	<?php
-		$step = @$_GET['step'];
-		$step = (!empty($step)) ? $step : 'mysql';
-	?>
 	<div class="container">
 		<div class="bg-light rounded shadow-sm p-2 mt-3">
-		<?php if ($step == 'mysql') { ?>
-			<h3>Настройки базы данных mysql</h3>
-			<hr />
-			
-			<?php if (isset($_SESSION['sql_errno'])) { ?>
-			<div class="alert alert-danger">
-				<?php echo sprintf('<b>Ошибка #%d:</b> %s', $_SESSION['sql_errno'], $_SESSION['sql_error']); ?>
-			</div>
-			<?php 
-				unset($_SESSION['sql_errno']);
-				unset($_SESSION['sql_error']);
-				} 
-			?>
-			
-			<form method="POST" action="/setup/act.php">
-				<input type="hidden" name="act" value="mysql_setup" />
-				
-				<div class="mb-3">
-					<label class="form-label">Имя пользователя MySQL</label>
-					<input type="text" name="mysql_user" class="form-control" />
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Имя базы данных MySQL</label>
-					<input type="text" name="mysql_db" class="form-control" />
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Пароль пользователя MySQL</label>
-					<input type="password" name="mysql_pass" class="form-control" />
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Хост сервера MySQL</label>
-					<input type="text" name="mysql_host" value="localhost" class="form-control" />
-				</div>
-				<hr />
-				<button type="submit" class="btn btn-danger">Далее</button>
-			</form>
-		<?php } ?>
-		
-		<?php if ($step == 'vkapi') { ?>
-			
-		<?php } ?>
-		
+		<?php
+			if (file_exists($file)) {
+				require_once $file;
+			}
+		?>
 		</div>
 	</div>
 </body>
