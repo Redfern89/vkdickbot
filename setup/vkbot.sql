@@ -153,7 +153,7 @@ INSERT INTO `globals` (`id`, `param`, `value`) VALUES
 (24, 'graph_x_labels_cnt', '10'),
 (25, 'graph_y_lines_cnt', '10'),
 (26, 'graph_title_font_size', '60'),
-(27, 'graph_font', '/var/www/scyk.ru/html/ARIAL.TTF'),
+(27, 'graph_font', 'ARIAL.TTF'),
 (28, 'graph_font_size', '12'),
 (29, 'graph_text_color', '16777215'),
 (30, 'graph_line_color', '16711680'),
