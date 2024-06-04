@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 03 2024 г., 17:32
+-- Время создания: Июн 04 2024 г., 21:33
 -- Версия сервера: 8.0.36-0ubuntu0.22.04.1
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -33,6 +33,7 @@ CREATE TABLE `dicks` (
   `first_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `nick_name` varchar(255) DEFAULT NULL,
+  `sex` varchar(1) NOT NULL DEFAULT 'm',
   `icon` int UNSIGNED NOT NULL,
   `peer_id` int NOT NULL,
   `len` int NOT NULL,
@@ -108,7 +109,11 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (31, 'коршун'),
 (32, 'энерджайзер'),
 (33, 'петушок'),
-(34, 'писюнчик');
+(34, 'писюнчик'),
+(35, 'важнейший орган'),
+(36, 'половой орган'),
+(37, 'головастик'),
+(38, 'дик');
 
 -- --------------------------------------------------------
 
@@ -153,7 +158,7 @@ INSERT INTO `globals` (`id`, `param`, `value`) VALUES
 (24, 'graph_x_labels_cnt', '10'),
 (25, 'graph_y_lines_cnt', '10'),
 (26, 'graph_title_font_size', '60'),
-(27, 'graph_font', '/var/www/scyk.ru/html/ARIAL.TTF'),
+(27, 'graph_font', 'ARIAL.TTF'),
 (28, 'graph_font_size', '12'),
 (29, 'graph_text_color', '16777215'),
 (30, 'graph_line_color', '16711680'),
@@ -161,7 +166,10 @@ INSERT INTO `globals` (`id`, `param`, `value`) VALUES
 (32, 'photo_top_count', '5'),
 (33, 'photo_top_font_size', '12'),
 (34, 'photo_top_size', '100'),
-(35, 'small_dick_len', '30');
+(35, 'small_dick_len', '30'),
+(36, 'stats_graph_font_size', '17'),
+(37, 'gods_cnt', '3'),
+(38, 'gods_graph_cnt', '30');
 
 -- --------------------------------------------------------
 
@@ -1265,6 +1273,50 @@ INSERT INTO `small_dick_names` (`id`, `name`) VALUES
 (8, 'петушок'),
 (9, 'писюнчик');
 
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `vagina_names`
+--
+
+CREATE TABLE `vagina_names` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `vagina_names`
+--
+
+INSERT INTO `vagina_names` (`id`, `name`) VALUES
+(1, 'промежность'),
+(2, 'киска'),
+(3, 'кунька'),
+(4, 'копилка'),
+(5, 'щель'),
+(6, 'тула'),
+(7, 'мохнатка'),
+(8, 'кунка'),
+(9, 'лохмушка'),
+(10, 'пуська'),
+(11, 'лоханка'),
+(12, 'ватрушка'),
+(13, 'вагиська'),
+(14, 'оболочка'),
+(15, 'колеориза'),
+(16, 'вагина'),
+(17, 'женская промежность'),
+(18, 'сика'),
+(19, 'пися'),
+(20, 'писька'),
+(21, 'писечка'),
+(22, 'манда'),
+(23, 'рыжая нахалка'),
+(24, 'щёлка'),
+(25, 'пилотка'),
+(26, 'кормилица'),
+(27, 'черная дыра');
+
 --
 -- Индексы сохранённых таблиц
 --
@@ -1317,6 +1369,12 @@ ALTER TABLE `small_dick_names`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `vagina_names`
+--
+ALTER TABLE `vagina_names`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT для сохранённых таблиц
 --
 
@@ -1336,13 +1394,13 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`
 --
 ALTER TABLE `globals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT для таблицы `icons`
@@ -1361,6 +1419,12 @@ ALTER TABLE `peers`
 --
 ALTER TABLE `small_dick_names`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT для таблицы `vagina_names`
+--
+ALTER TABLE `vagina_names`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

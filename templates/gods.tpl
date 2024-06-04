@@ -1,1 +1,2 @@
-%{USERNAME}%, это наши Боги
+Это наши Боги
+%{DICKS_COLLECTION}%

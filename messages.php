@@ -39,6 +39,7 @@
 							'peer_id' => $peer_id,
 							'last_metr' => time(),
 							'len' => __('@def_dick_len@'),
+							'sex' => 'm',
 							'metr_available' => time(),
 							'photo_50' => $userData['photo_50'],
 							'photo_100' => $userData['photo_100'],
@@ -51,11 +52,16 @@
 					$last_metr = $dick['last_metr'];
 					$current_time = time();
 					$len = $dick['len'];
+					$sex = $dick['sex'];
 					
-					if ($len >= __('@small_dick_len@')) {
-						$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
-					} else {
-						$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
+					if ($sex == 'm') {
+						if ($len >= __('@small_dick_len@')) {
+							$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
+						} else {
+							$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
+						}
+					} else if ($sex == 'f') {
+						$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
 					}
 
 					if ($current_time >= $metr_available) {
@@ -87,7 +93,7 @@
 						//$progress = getTextProgress($len, $min, $max, TRUE);
 						//$perc = floor($len * (100 / ($max - $min)));
 
-						$msg = load_tpl(sprintf('dick_%s', $act), array(
+						$msg = load_tpl(sprintf('%s_dick_action_%s', $sex, $act), array(
 							'USERNAME' => $userName,
 							'DICKNAME' => $dickName,
 							'CM' => getMetr($val),
@@ -105,7 +111,7 @@
 						$diff_time = $metr_available - $current_time;
 						$perc = 100 - floor($diff_time * (100 / $target_time));
 
-						_vkApi_messages_Send($peer_id, load_tpl('dick_not_ready', array(
+						_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_dick_not_ready', $sex), array(
 							'USERNAME' => $userName,
 							'DICKNAME' => $dickName,
 							'TIME_LEFT' => getTime($time_left),
@@ -115,7 +121,30 @@
 						)));
 					}
 				}
-
+				
+				if (preg_match('/^пол\s(м|ж)$/siu', $cmd, $cmd_found)) {
+					if (isset($cmd_found[1])) {
+						$sex = $cmd_found[1];
+						$sexList = array(
+							'м' => 'm',
+							'ж' => 'f'
+						);
+						$sex = $sexList[$sex];
+						$sexListLang = array(
+							'm' => 'мужской',
+							'f' => 'женский'
+						);
+						
+						if (WL_DB_RowExists('dicks', 'vkid', $from_id)) {
+							WL_DB_Update('dicks', array('sex' => $sex), array(['vkid', '=', $from_id]));
+							_vkApi_messages_Send($peer_id, load_tpl('change_sex', array(
+								'USERNAME' => $userName,
+								'SEX' => $sexListLang[$sex]
+							)));
+						}
+					}
+				}
+				
 				if ($cmd == 'топ') {
 					$dicks = WL_DB_GetRows('dicks', count: __('@top_count@'), order: array(['len', 'DESC']));
 					$dicksCollection = array();
@@ -167,10 +196,26 @@
 					getGodsStatGraph();
 					$file = DOCROOT . '/stats_graphs/gods.png';
 					if (file_exists($file)) {
+						$topIDS = getTopIDS((int)__('@gods_cnt@'));
+						$godsDicks = WL_DB_getRows('dicks', where: array(['vkid', 'IN', implode(',', $topIDS)]), order: array(['len', 'DESC']));
+						$godsDicksCollection = array();
+						
+						if (!empty($godsDicks)) {
+							for ($i = 0; $i < count($godsDicks); $i++) {
+								$icon = WL_DB_getField('icons', 'data', array(['id', '=', $godsDicks[$i]['icon']]));
+								if (!empty($godsDicks[$i]['nick_name'])) {
+									$godsDicksCollection[] = sprintf('%d. %s [id%d|%s] - %s', ($i+1), $icon, $godsDicks[$i]['vkid'], $godsDicks[$i]['nick_name'], getMetr($godsDicks[$i]['len']));
+								} else {
+									$godsDicksCollection[] = sprintf('%d. %s [id%d|%s %s] - %s', ($i+1), $icon, $godsDicks[$i]['vkid'], $godsDicks[$i]['first_name'], $godsDicks[$i]['last_name'], getMetr($godsDicks[$i]['len']));
+								}
+							}
+						}
+						
 						$photo = _vkApi_CreatePhotoAttachment($peer_id, $file, 'image/png');
 						_vkApi_messages_Send($peer_id, load_tpl('gods', array(
-							'USERNAME' => $userName
-						)), attachment: $photo);
+							'USERNAME' => $userName,
+							'DICKS_COLLECTION' => implode(PHP_EOL, $godsDicksCollection)
+						)), attachment: $photo, disable_mentions: TRUE);
 					}
 				}
 

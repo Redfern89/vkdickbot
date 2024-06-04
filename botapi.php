@@ -413,7 +413,13 @@
 		$h = ((int)__('@stats_graph_font_size@') * $cnt) + ($textPadding * $cnt) + ($paddingInner * 2);
 		$w = 300;
 		$legend = imagecreatetruecolor($w, $h);
-		imagefill($legend, 0, 0, 0xFFFFFF);
+		imagealphablending($legend, false);
+		imagesavealpha($legend, true);
+		
+		$image_color_transparent = imagecolorallocatealpha($legend, 0, 0, 0, 80);
+		imagefill($legend, 0, 0, $image_color_transparent);
+		
+		imagerectangle($legend, 0, 0, ($w -1), ($h -1), 0x7d7d7d);
 		
 		if (!empty($items)) {
 			$colors = array_keys($items);
@@ -426,7 +432,7 @@
 				$y2 = $y1 + (int)__('@stats_graph_font_size@');
 				imagefilledrectangle($legend, $x1, $y1, $x2, $y2, $colors[$i]);
 				imagerectangle($legend, $x1, $y1, $x2, $y2, 0x00);
-				imagettftext($legend, (int)__('@stats_graph_font_size@'), 0, 40, $y2, 0x00, __('@graph_font@'), $values[$i]);
+				imagettftext($legend, (int)__('@stats_graph_font_size@'), 0, 40, $y2, 0xFFFFFF, __('@graph_font@'), $values[$i]);
 			}
 		}
 		
@@ -477,7 +483,7 @@
 			}
 		}
 		
-		$topIDS = getTopIDS(__('@gods_cnt@'));
+		$topIDS = getTopIDS((int)__('@gods_cnt@'));
 		if (!empty($topIDS)) {
 			$colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0x00ffff, 0xffffff, 0xff00ff];
 			$legends = array();
@@ -528,8 +534,16 @@
 					imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, (int)__('@graph_text_color@'), __('@graph_font@'), $labelsY[$i]);
 				}
 				
+				$acts = array(
+					'inc' => '+',
+					'dec' => '-',
+					'equ' => '=',
+					'die' => '!',
+					'bon' => '+'
+				);
+				
 				for ($i = 0; $i < count($topIDS); $i++) {
-					$currentDataSet = WL_DB_getRows('dicks_stats', where: array(['vkid', '=', $topIDS[$i]]), count: (int)__('@stat_graph_cnt@'), order: array(['date', 'DESC']));
+					$currentDataSet = WL_DB_getRows('dicks_stats', where: array(['vkid', '=', $topIDS[$i]]), count: (int)__('@gods_graph_cnt@'), order: array(['date', 'DESC']));
 					$currentDataSet = array_reverse($currentDataSet);
 					$cnt = count($currentDataSet);
 					$intervalX = ((int)__('@graph_w@') - ($paddingLeft + $paddingRight) -1) / ($cnt - 1);
@@ -547,8 +561,26 @@
 							}
 							
 							imageline($img, $x1, $y1, $x2, $y2, $c);
+
+							
+							$act = $acts[$currentDataSet[$j]['act']];
+							$val = $currentDataSet[$j]['val'];
+							
+							$text = sprintf('%s%d', $act, $val);
+							$bbox = imagettfbbox((int)__('@graph_font_size@'), 0, __('@graph_font@'), $text);
+							$textW = -($bbox[0] - $bbox[2]);
+
+							$textX = $x1 - ($textW / 2);
+							$textY = $y1;
+
+							if ($j == ($cnt -1)) $textX = $x1 - ($textW);
+							if ($textY <= $paddingTop) $textY = $y1 + ((int)__('@graph_font_size@') * 2);
+							if ($j == 0) $textX = $paddingLeft;							
+							
+							imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, $c, __('@graph_font@'), $text);
+							
 							$x2 = $x1;
-							$y2 = $y1;						
+							$y2 = $y1;
 						}
 					}
 				}

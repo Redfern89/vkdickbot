@@ -1,5 +1,6 @@
-*.png
 *.jpg
+*.png
 *.jpeg
-logs/log.txt
 test.php
+logs/log.txt
+
