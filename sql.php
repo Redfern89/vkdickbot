@@ -285,7 +285,7 @@
 		return $result;
 	}	
 	
-	function WL_DB_GetRows($table, $fields='*', $where='*', $callback=null, $summary_logic='AND', $order='', $group='', $offset=0, $count=0, $echo=FALSE) {
+	function WL_DB_GetRows($table, $fields='*', $where='*', $callback=null, $summary_logic='AND', $order='', $group='', $offset=0, $count=0, $calc_found_rows=TRUE, $echo=FALSE) {
 		$result = array();
 		
 		$table = WL_DB_EscapeString($table);
@@ -295,7 +295,9 @@
 		$group = WL_DB_CreateGroup($table, $group);
 		$limit = WL_DB_CreateLimit($offset, $count);
 		
-		$q = "SELECT SQL_CALC_FOUND_ROWS $fields FROM `$table` WHERE $where $order $group $limit;";
+		
+		if ($calc_found_rows) $q = "SELECT SQL_CALC_FOUND_ROWS $fields FROM `$table` WHERE $where $order $group $limit;";
+		if (!$calc_found_rows) $q = "SELECT $fields FROM `$table` WHERE $where $order $group $limit;";
 		if ($echo) echo $q;
 		$ch = WL_DB_QUERY($q);
 		

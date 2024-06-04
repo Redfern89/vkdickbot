@@ -162,6 +162,17 @@
 
 					}
 				}
+				
+				if ($cmd == 'боги') {
+					getGodsStatGraph();
+					$file = DOCROOT . '/stats_graphs/gods.png';
+					if (file_exists($file)) {
+						$photo = _vkApi_CreatePhotoAttachment($peer_id, $file, 'image/png');
+						_vkApi_messages_Send($peer_id, load_tpl('gods', array(
+							'USERNAME' => $userName
+						)), attachment: $photo);
+					}
+				}
 
 				if (preg_match('/^подарить\s\[id(\d+)\|.*?\]\s(\d+)$/siu', $cmd, $cmd_found)) {
 					if (isset($cmd_found[1])) {
