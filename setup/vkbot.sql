@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 04 2024 г., 21:33
+-- Время создания: Июн 05 2024 г., 03:07
 -- Версия сервера: 8.0.36-0ubuntu0.22.04.1
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -113,7 +113,8 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (35, 'важнейший орган'),
 (36, 'половой орган'),
 (37, 'головастик'),
-(38, 'дик');
+(38, 'дик'),
+(39, 'младший братец');
 
 -- --------------------------------------------------------
 
@@ -158,7 +159,7 @@ INSERT INTO `globals` (`id`, `param`, `value`) VALUES
 (24, 'graph_x_labels_cnt', '10'),
 (25, 'graph_y_lines_cnt', '10'),
 (26, 'graph_title_font_size', '60'),
-(27, 'graph_font', 'ARIAL.TTF'),
+(27, 'graph_font', '/var/www/scyk.ru/html/ARIAL.TTF'),
 (28, 'graph_font_size', '12'),
 (29, 'graph_text_color', '16777215'),
 (30, 'graph_line_color', '16711680'),
@@ -1276,6 +1277,17 @@ INSERT INTO `small_dick_names` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `users_peers`
+--
+
+CREATE TABLE `users_peers` (
+  `peer_id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `vagina_names`
 --
 
@@ -1369,6 +1381,13 @@ ALTER TABLE `small_dick_names`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `users_peers`
+--
+ALTER TABLE `users_peers`
+  ADD KEY `peer_id` (`peer_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Индексы таблицы `vagina_names`
 --
 ALTER TABLE `vagina_names`
@@ -1394,7 +1413,7 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`
