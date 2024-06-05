@@ -52,7 +52,7 @@
 					$metr_available = $dick['metr_available'];
 					$last_metr = $dick['last_metr'];
 					$current_time = time();
-					$len = $dick['len'];
+					$len = (int)$dick['len'];
 					$sex = $dick['sex'];
 					
 					if ($sex == 'm') {
@@ -188,7 +188,9 @@
 							)));
 						}
 					} else {
-
+						_vkApi_messages_Send($peer_id, load_tpl('fail', array(
+							'USERNAME' => $userName
+						)));
 					}
 				}
 				
@@ -418,17 +420,43 @@
 					}
 				}
 				
-				if (preg_match('/^add_dick_name\s(.*)$/siu', $cmd, $cmd_found)) {
+				if (preg_match('/^add_(dick|vagina)_names\s(.*)$/siu', $cmd, $cmd_found)) {
 					if ($from_id == __('@admin_id@')) {
-						$dickName = trim($cmd_found[1]);
+						$organ = $cmd_found[1];
+						$names = $cmd_found[2];
+						$names = explode(',', $names);
+						$items = array();
 						
-						WL_DB_Insert('dick_names', array(
-							'name' => $dickName
+						if (!empty($names)) {
+							for ($i = 0; $i < count($names); $i++) {
+								$name = trim($names[$i]);
+								$items[] = sprintf('%d. %s', ($i +1), $name);
+								WL_DB_Insert(sprintf('%s_names', $organ), array('name' => $name));
+							}
+							_vkApi_messages_Send($peer_id, load_tpl('admin_add_names', array(
+								'USERNAME' => $userName,
+								'ITEMS' => implode(PHP_EOL, $items)
+							)));
+						}
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));						
+					}
+				}
+				
+				if (preg_match('/^add_(dick|vagina)_name\s(.*)$/siu', $cmd, $cmd_found)) {
+					if ($from_id == __('@admin_id@')) {
+						$organ = $cmd_found[1];
+						$name = $cmd_found[2];
+						
+						WL_DB_Insert(sprintf('%s_names', $organ), array(
+							'name' => $name
 						));
 						
 						_vkApi_messages_Send($peer_id, load_tpl('admin_add_dick_name', array(
 							'USERNAME' => $userName,
-							'DICKNAME' => $dickName
+							'DICKNAME' => $name
 						)));
 					} else {
 						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
@@ -437,13 +465,9 @@
 					}
 				}
 				
-				//if ($cmd == 'тест') {
-				//	$msg = _vkApi_messages_Send($peer_id, 'хуй');
-				//	_vkApi_messages_Pin($peer_id, $msg[0]['conversation_message_id']);
-				//}
-
+				
 			} // END OF cmd_found
-		}
+		} // END of is command
 
-	}
+	} // END of procedure
 ?>

@@ -883,13 +883,19 @@
 		));
 	}
 	
+	function insertPeer($peer_id) {
+		
+	}
+	
 	function insertTaxonomy($peer_id, $user_id) {
 		if (!WL_DB_RowMatch('users_peers', array(['user_id', '=', $user_id], ['peer_id', '=', $peer_id]))) {
-			WL_DB_Insert('users_peers', array(
+			return WL_DB_Insert('users_peers', array(
 				'peer_id' => $peer_id,
 				'user_id' => $user_id
 			));
 		}
+		
+		return 0;
 	}
 	
 	function getStatCnt($vkid) {
