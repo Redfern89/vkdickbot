@@ -92,11 +92,11 @@
 						insertStat($from_id, $peer_id, $len, $val, $act);
 						updateDickScores($from_id, $len, $target_time);
 
-						//$dicksAll = WL_DB_GetArray('dicks', 'len');
-						//$min = min($dicksAll);
-						//$max = max($dicksAll);
-						//$progress = getTextProgress($len, $min, $max, TRUE);
-						//$perc = floor($len * (100 / ($max - $min)));
+						$dicksAll = WL_DB_GetArray('dicks', 'len');
+						$min = min($dicksAll);
+						$max = max($dicksAll);
+						$progress = getTextProgress($len, $min, $max, TRUE);
+						$perc = floor($len * (100 / ($max - $min)));
 
 						$msg = load_tpl(sprintf('%s_dick_action_%s', $sex, $act), array(
 							'USERNAME' => $userName,
@@ -105,8 +105,8 @@
 							'LEN' => getMetr($len),
 							'BONUS_CM' => getMetr(__('@bonus_dick_len@')),
 							'TIME_LEFT' => getTime($time_left),
-							//'PROGRESS' => $progress,
-							//'PERC' => $perc
+							'PROGRESS' => $progress,
+							'PERC' => $perc
 						)); 
 
 						_vkApi_messages_Send($peer_id, $msg);
