@@ -41,12 +41,13 @@
 							'last_metr' => time(),
 							'len' => __('@def_dick_len@'),
 							'sex' => 'm',
-							'metr_available' => time(),
+							'metr_available' => time() -10,
 							'photo_50' => $userData['photo_50'],
 							'photo_100' => $userData['photo_100'],
 							'photo_200' => $userData['photo_200']
 						));
 						insertStat($from_id, $peer_id, __('@def_dick_len@'), __('@def_dick_len@'), 'inc');
+						//$len = (int)__('@def_dick_len@');
 					}					
 					$dick = getDick($from_id);
 					$metr_available = $dick['metr_available'];
@@ -54,7 +55,7 @@
 					$current_time = time();
 					$len = (int)$dick['len'];
 					$sex = $dick['sex'];
-					
+
 					if ($sex == 'm') {
 						if ($len >= __('@small_dick_len@')) {
 							$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
@@ -70,18 +71,20 @@
 						$act = probabilityRandom2(['inc' => 78, 'dec' => 17, 'equ' => 3, 'die' => 1, 'bon' => 1]);
 						$val = mt_rand(__('@dick_len_rnd_min@'), __('@dick_len_rnd_max@'));
 						$time_counter_rnd = mt_rand(__('@time_rnd_min@'), __('@time_rnd_max@'));
-
-						if ($act == 'inc') $len += $val;
-						if ($act == 'dec') $len -= $val;
-						if ($act == 'equ') $len = $len;
-						if ($act == 'die') $len = __('@def_dick_len@');
-						if ($act == 'bon') {
-							$len += __('@bonus_dick_len@');
-							$val = __('@bonus_dick_len@');
+						
+						if (getStatCnt($from_id) >= __('@start_luck_cnt@')) {
+							if ($act == 'inc') $len += $val;
+							if ($act == 'dec') $len -= $val;
+							if ($act == 'equ') $len = $len;
+							if ($act == 'die') $len = __('@def_dick_len@');
+							if ($act == 'bon') {
+								$len += __('@bonus_dick_len@');
+								$val = __('@bonus_dick_len@');
+							}
+						} else if (getStatCnt($from_id) < __('@start_luck_cnt@')) {
+							$act = 'inc';
+							$len += $val;
 						}
-
-						if (getStatCnt($from_id) < __('@start_luck_cnt@')) $act = 'inc';
-
 						$target_time = $current_time + $time_counter_rnd;
 						$time_left = $target_time - $current_time;
 
@@ -103,7 +106,7 @@
 							'TIME_LEFT' => getTime($time_left),
 							//'PROGRESS' => $progress,
 							//'PERC' => $perc
-						));
+						)); 
 
 						_vkApi_messages_Send($peer_id, $msg);
 					} else {
@@ -465,6 +468,24 @@
 					}
 				}
 				
+				if (preg_match('/^удалить\s\[id(\d+)\|(.*?)\]/siu', $cmd, $cmd_found)) {
+					if ($from_id == __('@admin_id@')) {
+						$id = $cmd_found[1];
+						
+						WL_DB_Delete('dicks', array(['vkid', '=', $id]));
+						WL_DB_Delete('dicks_stats', array(['vkid', '=', $id]));
+						WL_DB_Delete('users_peers', array(['user_id', '=', $id]));
+						
+						_vkApi_messages_Send($peer_id, load_tpl('admin_delete_user', array(
+							'USERNAME' => $userName,
+							'ACTUSERNAME' => $cmd_found[2]
+						)));
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));						
+					}
+				}
 				
 			} // END OF cmd_found
 		} // END of is command

@@ -884,7 +884,19 @@
 	}
 	
 	function insertPeer($peer_id) {
-		
+		if (!WL_DB_RowExists('peers', 'peer_id', $peer_id)) {
+			$peer_data = _vkApi_Call('messages.getConversationsById', array(
+				'peer_ids' => $peer_id
+			));
+			if (isset($peer_data['items'][0]['peer'])) {
+				$peer = $peer_data['items'][0]['peer'];
+				
+				WL_DB_Insert('peers', array(
+					'peer_id' => $peer_id,
+					'title' => $peer['chat_settings']['title']
+				));
+			}
+		}
 	}
 	
 	function insertTaxonomy($peer_id, $user_id) {
@@ -918,14 +930,14 @@
 		$memebers = _vkApi_Call('messages.getConversationMembers', array(
 			'peer_id' => $peer_id
 		));
-		
+
 		if (isset($memebers['items'])) {
 			if (!empty($memebers['items'])) {
-				
+
 				for ($i = 0; $i < count($memebers['items']); $i++) {
 					$item = $memebers['items'][$i];
 					$member_id = $item['member_id'];
-					
+
 					if (WL_DB_RowExists('dicks', 'vkid', $member_id)) {
 						WL_DB_Insert('users_peers', array(
 							'peer_id' => $peer_id,
