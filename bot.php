@@ -20,7 +20,7 @@
 				if (__('@cron_work@') == 'false') {
 					message_process($message_obj);
 				} else {
-					_vkApi_messages_Send($message_obj['peer_id'], 'Сервер занят, повтори запрос через минутку');
+					//_vkApi_messages_Send($message_obj['peer_id'], 'Сервер занят, повтори запрос через минутку');
 				}
 			}
 		}

@@ -30,6 +30,7 @@
 				}
 
 				if (in_array(mb_strtolower($cmd), $measureActionCommands)) {
+					insertTaxonomy($peer_id, $from_id);
 					if (!WL_DB_RowExists('dicks', 'vkid', $from_id)) {
 						WL_DB_Insert('dicks', array(
 							'vkid' => $from_id,
@@ -146,27 +147,20 @@
 				}
 				
 				if ($cmd == 'топ') {
-					$dicks = WL_DB_GetRows('dicks', count: __('@top_count@'), order: array(['len', 'DESC']));
-					$dicksCollection = array();
-
-					if (!empty($dicks)) {
-						for ($i = 0; $i < count($dicks); $i++) {
-							$icon = WL_DB_getField('icons', 'data', array(['id', '=', $dicks[$i]['icon']]));
-
-							if (!empty($dicks[$i]['nick_name'])) $userName = sprintf('[id%d|%s]', $dicks[$i]['vkid'], $dicks[$i]['nick_name']);
-							else $userName = sprintf('[id%d|%s %s]', $dicks[$i]['vkid'], $dicks[$i]['first_name'], $dicks[$i]['last_name']);
-
-							$dicksCollection[] = sprintf('%d. %s %s - %s',
-								($i+1), 
-								$icon,
-								$userName,
-								getMetr($dicks[$i]['len'])
-							);
-						}
-
+					_vkApi_messages_Send($peer_id, load_tpl('top_dicks', array(
+						'DICKS_COLLECTION' => metrTopGlobal()
+					)), disable_mentions: true);
+				}
+				
+				if ($cmd == 'топчат') {
+					if (!$privateMessage) {
 						_vkApi_messages_Send($peer_id, load_tpl('top_dicks', array(
-							'DICKS_COLLECTION' => implode(PHP_EOL, $dicksCollection)
+							'DICKS_COLLECTION' => metrTop($peer_id)
 						)), disable_mentions: true);
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('private_msg_fail', array(
+							'USERNAME' => $userName
+						)));
 					}
 				}
 

@@ -326,6 +326,69 @@
 		}
 		imagedestroy($img);
 	}
+	
+	function metrTopGlobal() {
+		$data = WL_DB_freeQueryAssoc(load_tpl('sql/global_top', array(
+			'NULL' => null
+		)));
+		$result = array();
+		if (!empty($data)) {
+			for ($i = 0; $i < count($data); $i++) {
+				if (!empty($data[$i]['nick_name'])) {
+					$result[] = sprintf('%d. %s [id%d|%s] - %s', 
+						($i +1),
+						$data[$i]['icon_emoji'],
+						$data[$i]['vkid'],
+						$data[$i]['nick_name'],
+						getMetr($data[$i]['len'])
+					);
+				} else {
+					$result[] = sprintf('%d. %s [id%d|%s %s] - %s', 
+						($i +1),
+						$data[$i]['icon_emoji'],
+						$data[$i]['vkid'],
+						$data[$i]['first_name'],
+						$data[$i]['last_name'],
+						getMetr($data[$i]['len'])
+					);				
+				}
+			}
+		}
+		
+		return implode(PHP_EOL, $result);		
+	}
+	
+	function metrTop($peer_id) {
+		$data = WL_DB_freeQueryAssoc(load_tpl('sql/top', array(
+			'PEER_ID' => $peer_id
+		)));
+		$result = array();
+		
+		if (!empty($data)) {
+			for ($i = 0; $i < count($data); $i++) {
+				if (!empty($data[$i]['nick_name'])) {
+					$result[] = sprintf('%d. %s [id%d|%s] - %s', 
+						($i +1),
+						$data[$i]['icon_emoji'],
+						$data[$i]['vkid'],
+						$data[$i]['nick_name'],
+						getMetr($data[$i]['len'])
+					);
+				} else {
+					$result[] = sprintf('%d. %s [id%d|%s %s] - %s', 
+						($i +1),
+						$data[$i]['icon_emoji'],
+						$data[$i]['vkid'],
+						$data[$i]['first_name'],
+						$data[$i]['last_name'],
+						getMetr($data[$i]['len'])
+					);				
+				}
+			}
+		}
+		
+		return implode(PHP_EOL, $result);
+	}
 
 	function getMetrTopPhoto($to_browswer=FALSE) {
 		$lengthsCollection = array();
@@ -561,7 +624,6 @@
 							}
 							
 							imageline($img, $x1, $y1, $x2, $y2, $c);
-
 							
 							$act = $acts[$currentDataSet[$j]['act']];
 							$val = $currentDataSet[$j]['val'];
@@ -821,6 +883,15 @@
 		));
 	}
 	
+	function insertTaxonomy($peer_id, $user_id) {
+		if (!WL_DB_RowMatch('users_peers', array(['user_id', '=', $user_id], ['peer_id', '=', $peer_id]))) {
+			WL_DB_Insert('users_peers', array(
+				'peer_id' => $peer_id,
+				'user_id' => $user_id
+			));
+		}
+	}
+	
 	function getStatCnt($vkid) {
 		return WL_DB_GetCount('dicks_stats', where: array(['vkid', '=', $vkid]));
 	}
@@ -837,10 +908,34 @@
 		WL_DB_Update('dicks', array('len' => $len), array(['vkid', '=', $vkid]));
 	}
 
+	function CRON_ReloadPeerUsers($peer_id) {
+		$memebers = _vkApi_Call('messages.getConversationMembers', array(
+			'peer_id' => $peer_id
+		));
+		
+		if (isset($memebers['items'])) {
+			if (!empty($memebers['items'])) {
+				
+				for ($i = 0; $i < count($memebers['items']); $i++) {
+					$item = $memebers['items'][$i];
+					$member_id = $item['member_id'];
+					
+					if (WL_DB_RowExists('dicks', 'vkid', $member_id)) {
+						WL_DB_Insert('users_peers', array(
+							'peer_id' => $peer_id,
+							'user_id' => $member_id
+						));
+					}
+				}
+			}
+		}		
+	}
+
 	function CRON_reloadPeers() {
 		$peers = array();
-
+		WL_DB_CleanTable('users_peers');
 		WL_DB_CleanTable('peers');
+		
 		for ($i = (int)__('@peer_probe_start@'); $i <= (int)__('@peer_probe_end@'); $i++) {
 			$peer_id = 2000000000 + $i;
 			$peers = _vkApi_Call('messages.getConversationsById', array(
@@ -852,6 +947,7 @@
 					'peer_id' => $item['peer']['id'],
 					'title' => $item['chat_settings']['title']
 				));
+				CRON_ReloadPeerUsers($peer_id);
 			}
 		}
 	}
