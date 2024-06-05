@@ -178,9 +178,15 @@
 					$file = DOCROOT . '/stats_graphs/' . $from_id . '.png';
 					if (file_exists($file)) {
 						$photo = _vkApi_CreatePhotoAttachment($peer_id, $file, 'image/png');
-						_vkApi_messages_Send($peer_id, load_tpl('stat', array(
-							'USERNAME' => $userName
-						)), attachment: $photo);
+						if (!empty($photo)) {
+							_vkApi_messages_Send($peer_id, load_tpl('stat', array(
+								'USERNAME' => $userName
+							)), attachment: $photo);
+						} else {
+							_vkApi_messages_Send($peer_id, load_tpl('fail', array(
+								'USERNAME' => $userName
+							)));
+						}
 					} else {
 
 					}
