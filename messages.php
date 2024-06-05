@@ -71,8 +71,9 @@
 						$act = probabilityRandom2(['inc' => 78, 'dec' => 17, 'equ' => 3, 'die' => 1, 'bon' => 1]);
 						$val = mt_rand(__('@dick_len_rnd_min@'), __('@dick_len_rnd_max@'));
 						$time_counter_rnd = mt_rand(__('@time_rnd_min@'), __('@time_rnd_max@'));
+						$statCnt = getStatCnt($from_id);
 						
-						if (getStatCnt($from_id) >= __('@start_luck_cnt@')) {
+						if ($statCnt >= __('@start_luck_cnt@')) {
 							if ($act == 'inc') $len += $val;
 							if ($act == 'dec') $len -= $val;
 							if ($act == 'equ') $len = $len;
@@ -81,7 +82,7 @@
 								$len += __('@bonus_dick_len@');
 								$val = __('@bonus_dick_len@');
 							}
-						} else if (getStatCnt($from_id) < __('@start_luck_cnt@')) {
+						} else if ($statCnt < __('@start_luck_cnt@')) {
 							$act = 'inc';
 							$len += $val;
 						}
