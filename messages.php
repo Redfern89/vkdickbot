@@ -233,7 +233,7 @@
 						$donateLen = (int)$cmd_found[2];
 
 						if (!WL_DB_RowExists('dicks', 'vkid', $id)) {
-							_vkApi_messages_Send($peer_id, load_tpl('dick_donate_error_not_found', array(
+							_vkApi_messages_Send($peer_id, load_tpl('error_user_not_found', array(
 								'USERNAME' => $userName
 							)));
 							$error = TRUE;
@@ -325,6 +325,42 @@
 						} else {
 							
 						}
+					}
+				}
+				
+				if ($cmd == 'время') {
+					if (WL_DB_RowExists('dicks', 'vkid', $from_id)) {
+						$dick = getDick($from_id);
+						$metr_available = $dick['metr_available'];
+						$current_time = time();
+						$time_left = $metr_available - $current_time;
+						
+						if ($time_left > 0) {
+							_vkApi_messages_Send($peer_id, load_tpl('time_left', array(
+								'USERNAME' => $userName,
+								'TIMELEFT' => getTime($time_left)
+							)));
+						} else {
+							$sex = $dick['sex'];
+							$len = $dick['len'];
+							if ($sex == 'm') {
+								if ($len >= __('@small_dick_len@')) {
+									$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
+								} else {
+									$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
+								}
+							} else if ($sex == 'f') {
+								$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
+							}
+							
+							_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_time_to_ready', $sex), array(
+								'USERNAME' => $userName,
+								'DICKNAME' => $dickName
+							)));
+						}
+						
+					} else {
+						// 404 - error_user_not_found
 					}
 				}
 

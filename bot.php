@@ -9,7 +9,7 @@
 	if (isset($event['type'])) {
 
 		if ($event['type'] == CALLBACK_API_EVENT_CONFIRMATION) {
-			echo CALLBACK_API_CONFIRMATION_TOKEN;
+			echo __('@vkapi_confirmation_token@');
 		}
 
 		if ($event['type'] == CALLBACK_API_EVENT_MESSAGE_NEW && $secret == __('@vkapi_secret_key@')) {
