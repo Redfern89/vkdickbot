@@ -76,8 +76,14 @@
 						if ($statCnt >= __('@start_luck_cnt@')) {
 							if ($act == 'inc') $len += $val;
 							if ($act == 'dec') $len -= $val;
-							if ($act == 'equ') $len = $len;
-							if ($act == 'die') $len = __('@def_dick_len@');
+							if ($act == 'equ') {
+								$len = $len;
+								$val = 0;
+							}
+							if ($act == 'die') {
+								$len = __('@def_dick_len@');
+								$val = ($len - (int)__('@def_dick_len@'));
+							}
 							if ($act == 'bon') {
 								$len += __('@bonus_dick_len@');
 								$val = __('@bonus_dick_len@');
