@@ -327,6 +327,13 @@
 		imagedestroy($img);
 	}
 	
+	function randomUserIDFromPeer($peer_id) {
+		$data = WL_DB_freeQueryAssoc(load_tpl('sql/donate_rnd_search', array(
+			'PEER_ID' => $peer_id
+		)));
+		return isset($data[0]['vkid']) ? $data[0]['vkid'] : 0;
+	}
+	
 	function metrTopGlobal() {
 		$data = WL_DB_freeQueryAssoc(load_tpl('sql/global_top', array(
 			'NULL' => null

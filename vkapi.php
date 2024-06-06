@@ -58,7 +58,7 @@
 	}
 
 	// Функция отправки сообщения
-	function _vkApi_messages_Send($peer_id, $text='', $attachment='', $reply_to='', $disable_mentions=false) {
+	function _vkApi_messages_Send($peer_id, $text='', $attachment='', $reply_to='', $disable_mentions=false, $keyboard='', $payload='') {
 		$params = array(
 			'peer_ids' => $peer_id,
 			'random_id' => random_uint32_t(),
@@ -66,6 +66,8 @@
 		);
 		if ($disable_mentions) $params['disable_mentions'] = '1';
 		if (!empty($attachment)) $params['attachment'] = $attachment;
+		if (!empty($keyboard)) $params['keyboard'] = $keyboard;
+		if (!empty($payload)) $params['keyboard'] = $payload;
 
 		return _vkApi_Call('messages.send', $params);
 	}

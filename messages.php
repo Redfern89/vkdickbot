@@ -367,6 +367,9 @@
 						
 					} else {
 						// 404 - error_user_not_found
+						_vkApi_messages_Send($peer_id, load_tpl('error_user_not_found', array(
+							'USERNAME' => $userName
+						)));
 					}
 				}
 
@@ -522,6 +525,44 @@
 						_vkApi_messages_Send($peer_id, load_tpl('admin_delete_user', array(
 							'USERNAME' => $userName,
 							'ACTUSERNAME' => $cmd_found[2]
+						)));
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));						
+					}
+				}
+				
+				if (preg_match('/^рандом\s(\d+)/siu', $cmd, $cmd_found)) {
+					if ($from_id == __('@admin_id@')) {
+						$val = $cmd_found[1];
+						$id = randomUserIDFromPeer($peer_id);
+						$dick = getDick($id);
+						$len = $dick['len'];
+						$sex = $dick['sex'];
+						$len += $val;
+						
+						if (!empty($dick['nick_name'])) $userName = sprintf('[id%d|%s]', $id, $dick['nick_name']);
+						else $userName = sprintf('[id%d|%s]', $id, $dick['first_name']);
+						
+						if ($sex == 'm') {
+							if ($len >= __('@small_dick_len@')) {
+								$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
+							} else {
+								$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
+							}
+						} else if ($sex == 'f') {
+							$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
+						}
+
+						updateDickLen($id, $len);
+						insertStat($id, $peer_id, $len, $val, 'inc');						
+						
+						_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_admin_bonus_rnd', $sex), array(
+							'USERNAME' => $userName,
+							'DICKNAME' => $dickName,
+							'VAL' => getMetr($val),
+							'LEN' => getMetr($len)
 						)));
 					} else {
 						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
