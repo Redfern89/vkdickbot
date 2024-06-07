@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 05 2024 г., 03:07
+-- Время создания: Июн 07 2024 г., 16:07
 -- Версия сервера: 8.0.36-0ubuntu0.22.04.1
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -114,7 +114,31 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (36, 'половой орган'),
 (37, 'головастик'),
 (38, 'дик'),
-(39, 'младший братец');
+(39, 'младший братец'),
+(40, 'огрызок'),
+(41, 'придаток'),
+(42, 'висун'),
+(43, 'детородный орган'),
+(44, 'болт'),
+(45, 'конец'),
+(46, 'хрен'),
+(47, 'кукан'),
+(48, 'нефритовый стержень'),
+(49, 'детородный орган'),
+(50, 'болт'),
+(51, 'конец'),
+(52, 'хрен'),
+(53, 'кукан'),
+(54, 'нефритовый стержень'),
+(55, 'елдак'),
+(56, 'репродуктивный орган'),
+(57, 'трахоштырь'),
+(58, 'ебоштепсель'),
+(59, 'вундерфалус'),
+(60, 'смычок'),
+(61, 'хер'),
+(62, 'шишак'),
+(63, 'очинчин');
 
 -- --------------------------------------------------------
 
@@ -134,12 +158,12 @@ CREATE TABLE `globals` (
 
 INSERT INTO `globals` (`id`, `param`, `value`) VALUES
 (1, 'dick_len_rnd_min', '1'),
-(2, 'dick_len_rnd_max', '10'),
+(2, 'dick_len_rnd_max', '20'),
 (3, 'def_dick_len', '10'),
 (4, 'time_rnd_min', '1'),
-(5, 'time_rnd_max', '10800'),
+(5, 'time_rnd_max', '7200'),
 (6, 'top_count', '10'),
-(7, 'bonus_dick_len', '20'),
+(7, 'bonus_dick_len', '30'),
 (8, 'peer_probe_start', '1'),
 (9, 'peer_probe_end', '15'),
 (10, 'cron_work', 'false'),
@@ -170,7 +194,11 @@ INSERT INTO `globals` (`id`, `param`, `value`) VALUES
 (35, 'small_dick_len', '30'),
 (36, 'stats_graph_font_size', '17'),
 (37, 'gods_cnt', '3'),
-(38, 'gods_graph_cnt', '30');
+(38, 'gods_graph_cnt', '30'),
+(39, 'bar_chart_bar_width', '90'),
+(40, 'bar_chart_padding', '5'),
+(41, 'daily_bonus_rnd_min', '1'),
+(42, 'daily_bonus_rnd_max', '25');
 
 -- --------------------------------------------------------
 
@@ -1306,7 +1334,7 @@ INSERT INTO `vagina_names` (`id`, `name`) VALUES
 (3, 'кунька'),
 (4, 'копилка'),
 (5, 'щель'),
-(6, 'тула'),
+(6, 'расщелина'),
 (7, 'мохнатка'),
 (8, 'кунка'),
 (9, 'лохмушка'),
@@ -1314,7 +1342,7 @@ INSERT INTO `vagina_names` (`id`, `name`) VALUES
 (11, 'лоханка'),
 (12, 'ватрушка'),
 (13, 'вагиська'),
-(14, 'оболочка'),
+(14, 'дырка'),
 (15, 'колеориза'),
 (16, 'вагина'),
 (17, 'женская промежность'),
@@ -1327,7 +1355,13 @@ INSERT INTO `vagina_names` (`id`, `name`) VALUES
 (24, 'щёлка'),
 (25, 'пилотка'),
 (26, 'кормилица'),
-(27, 'черная дыра');
+(27, 'черная дыра'),
+(28, 'лунка'),
+(29, 'чертога траха'),
+(30, 'скважина'),
+(31, 'кожаная дверь'),
+(32, 'пизда'),
+(33, 'кунька глубокая');
 
 --
 -- Индексы сохранённых таблиц
@@ -1413,13 +1447,13 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`
 --
 ALTER TABLE `globals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT для таблицы `icons`
@@ -1443,7 +1477,7 @@ ALTER TABLE `small_dick_names`
 -- AUTO_INCREMENT для таблицы `vagina_names`
 --
 ALTER TABLE `vagina_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
