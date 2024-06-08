@@ -81,7 +81,7 @@
 						$val = mt_rand(__('@dick_len_rnd_min@'), __('@dick_len_rnd_max@'));
 						$time_counter_rnd = mt_rand(__('@time_rnd_min@'), __('@time_rnd_max@'));
 						$statCnt = getStatCnt($from_id);
-						
+												
 						if ($statCnt >= __('@start_luck_cnt@')) {
 							if ($act == 'inc') $len += $val;
 							if ($act == 'dec') $len -= $val;
@@ -101,6 +101,17 @@
 							$act = 'inc';
 							$len += $val;
 						}
+						
+						$s = floor($time_counter_rnd % 60);
+						$m = floor($time_counter_rnd / 60);
+						$h = floor($time_counter_rnd / 3600);
+						
+						if ($s == $val || $m == $val || $h == $val) {
+							$act = 'god';
+							$val = (int)__('@god_dick_len@');
+							$len += $val;
+						}
+						
 						$target_time = $current_time + $time_counter_rnd;
 						$time_left = $target_time - $current_time;
 

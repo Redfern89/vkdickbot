@@ -191,7 +191,7 @@
 			$titleBbox = imagettfbbox((int)__('@graph_title_font_size@'), 0, __('@graph_font@'), $title);
 			$titleW    = ($titleBbox[2] - $titleBbox[0]);
 			$x = (int)(((int)__('@graph_w@') / 2) - (($titleBbox[2] - $titleBbox[0]) / 2));
-			$y = (int)((int)__('@graph_h@') + (int)__('@graph_title_font_size@')) / 2;
+			$y = (int)(((int)__('@graph_h@') + (int)__('@graph_title_font_size@')) / 2 - ($paddingBottom / 2));
 			imagettftext($img, (int)__('@graph_title_font_size@'), 0, $x, $y, $color, __('@graph_font@'), $title);
 
 			$lineW = 10;
