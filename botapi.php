@@ -269,7 +269,9 @@
 				'dec' => '-',
 				'equ' => '=',
 				'bon' => '+',
-				'die' => '!'
+				'die' => '!',
+				'doninc' => '*',
+				'dondec' => '/'
 			);
 
 			for ($i = 0; $i < $cnt; $i++) {
@@ -302,7 +304,7 @@
 					$textY = $y1;
 
 					if ($i == ($cnt -1)) $textX = $x1 - ($textW);
-					if ($textY <= $paddingTop) $textY = $y1 + ((int)__('@graph_font_size@') * 2);
+					//if ($textY <= $paddingTop) $textY = $y1 + ((int)__('@graph_font_size@') * 2);
 					if ($i == 0) $textX = $paddingLeft;
 
 					if ($i == ($cnt -1) && $len !== $max) {
@@ -310,7 +312,7 @@
 						$ly1 = $y1;
 						$lx2 = __('@graph_w@') - $paddingRight;
 						$ly2 = $y1;
-						imagedashedline($img, $lx1, $ly1, $lx2, $ly2, (int)__('@graph_frame_color@'));
+						//imagedashedline($img, $lx1, $ly1, $lx2, $ly2, (int)__('@graph_frame_color@'));
 					}
 
 					imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, (int)__('@graph_text_color@'), __('@graph_font@'), $text);
@@ -609,7 +611,9 @@
 					'dec' => '-',
 					'equ' => '=',
 					'die' => '!',
-					'bon' => '+'
+					'bon' => '+',
+					'doninc' => '*',
+					'dondec' => '/'
 				);
 				
 				for ($i = 0; $i < count($topIDS); $i++) {

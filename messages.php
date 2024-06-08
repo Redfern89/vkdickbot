@@ -11,6 +11,15 @@
 		$measureActionCommands = ['измерить', 'измерь', 'померить', 'померь'];
 		$statActionCommands = ['стата', 'стат', 'статистика'];
 		$helpCommands = ['?', 'помощь', 'помоги'];
+		
+		WL_DB_Insert('messages', array(
+			'from_id' => $from_id,
+			'peer_id' => $peer_id,
+			'msg_id' => isset($msg_obj['conversation_message_id']) ? $msg_obj['conversation_message_id'] : 0,
+			'date' => time(),
+			'text' => $text,
+			'object_full' => json_encode($msg_obj)
+		));
 
 		if (preg_match(sprintf('/^%s\s(.*)$/siu', __('@bot_cmd@')), $text, $found)) {
 			if (isset($found[1])) {
@@ -204,6 +213,47 @@
 					}
 				}
 				
+				if (preg_match('/^стата?\s\[id(\d+)\|.*?\]$/siu', $cmd, $cmd_found)) {
+					if (isset($cmd_found[1])) {
+						$id = (int)$cmd_found[1];
+						if (WL_DB_RowExists('dicks', 'vkid', $id)) {
+							$dickData = getDick($id);
+							
+							if (!empty($dickData['nick_name'])) {
+								$userName = sprintf('[id%d|%s]', $dickData['vkid'], $dickData['nick_name']);
+							} else {
+								$userName = sprintf('[id%d|%s]', $dickData['vkid'], $dickData['first_name']);
+							}
+
+							getDickStatGraph($id);
+							$file = DOCROOT . '/stats_graphs/' . $id . '.png';
+							if (file_exists($file)) {
+								$photo = _vkApi_CreatePhotoAttachment($peer_id, $file, 'image/png');
+								if (!empty($photo)) {
+									_vkApi_messages_Send($peer_id, load_tpl('stat_user', array(
+										'USERNAME' => $userName
+									)), attachment: $photo);
+								} else {
+									// photo api err
+									_vkApi_messages_Send($peer_id, load_tpl('fail', array(
+										'USERNAME' => $userName
+									)));
+								}
+							} else {
+								// file not found
+								_vkApi_messages_Send($peer_id, load_tpl('fail', array(
+									'USERNAME' => $userName
+								)));
+							}
+						} else {
+							// user not found error_user_not_found.tpl
+							_vkApi_messages_Send($peer_id, load_tpl('error_user_not_found', array(
+								'USERNAME' => $userName
+							)));
+						}
+					}
+				}
+				
 				if ($cmd == 'боги') {
 					getGodsStatGraph();
 					$file = DOCROOT . '/stats_graphs/gods.png';
@@ -291,8 +341,8 @@
 
 							updateDickLen($from_id, $myDickLen);
 							updateDickLen($id, $donateDickLen);
-							insertStat($from_id, $peer_id, $myDickLen, $donateLen, 'dec');
-							insertStat($id, $peer_id, $donateDickLen, $donateLen, 'inc');
+							insertStat($from_id, $peer_id, $myDickLen, $donateLen, 'dondec');
+							insertStat($id, $peer_id, $donateDickLen, $donateLen, 'doninc');
 
 							_vkApi_messages_Send($peer_id, load_tpl('dick_donate', array(
 								'USERNAME' => $donateUserName,
