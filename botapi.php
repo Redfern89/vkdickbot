@@ -271,7 +271,8 @@
 				'bon' => '+',
 				'die' => '!',
 				'doninc' => '*',
-				'dondec' => '/'
+				'dondec' => '/',
+				'rndinc' => '^'
 			);
 
 			for ($i = 0; $i < $cnt; $i++) {
@@ -613,7 +614,8 @@
 					'die' => '!',
 					'bon' => '+',
 					'doninc' => '*',
-					'dondec' => '/'
+					'dondec' => '/',
+					'rndinc' => '^'
 				);
 				
 				for ($i = 0; $i < count($topIDS); $i++) {

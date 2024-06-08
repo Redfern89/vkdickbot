@@ -606,7 +606,7 @@
 						}
 
 						updateDickLen($id, $len);
-						insertStat($id, $peer_id, $len, $val, 'inc');						
+						insertStat($id, $peer_id, $len, $val, 'rndinc');						
 						
 						_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_admin_bonus_rnd', $sex), array(
 							'USERNAME' => $userName,
