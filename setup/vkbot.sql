@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 6.0.0-dev+20240523.2997b5272e
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 07 2024 г., 16:07
+-- Время создания: Июн 09 2024 г., 08:07
 -- Версия сервера: 8.0.36-0ubuntu0.22.04.1
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -41,7 +41,8 @@ CREATE TABLE `dicks` (
   `metr_available` int DEFAULT NULL,
   `photo_50` varchar(1000) DEFAULT NULL,
   `photo_100` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `photo_200` varchar(1000) DEFAULT NULL
+  `photo_200` varchar(1000) DEFAULT NULL,
+  `probabilities` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -138,7 +139,11 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (60, 'смычок'),
 (61, 'хер'),
 (62, 'шишак'),
-(63, 'очинчин');
+(63, 'очинчин'),
+(64, 'чижик'),
+(65, 'клитор'),
+(66, 'половой член'),
+(67, 'кончик');
 
 -- --------------------------------------------------------
 
@@ -149,6 +154,7 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 CREATE TABLE `globals` (
   `id` int UNSIGNED NOT NULL,
   `param` varchar(255) NOT NULL,
+  `lparam` varchar(255) DEFAULT NULL,
   `value` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -156,49 +162,55 @@ CREATE TABLE `globals` (
 -- Дамп данных таблицы `globals`
 --
 
-INSERT INTO `globals` (`id`, `param`, `value`) VALUES
-(1, 'dick_len_rnd_min', '1'),
-(2, 'dick_len_rnd_max', '20'),
-(3, 'def_dick_len', '10'),
-(4, 'time_rnd_min', '1'),
-(5, 'time_rnd_max', '7200'),
-(6, 'top_count', '10'),
-(7, 'bonus_dick_len', '30'),
-(8, 'peer_probe_start', '1'),
-(9, 'peer_probe_end', '15'),
-(10, 'cron_work', 'false'),
-(11, 'vkapi_access_token', ''),
-(12, 'vkapi_version', '5.131'),
-(13, 'vkapi_secret_key', ''),
-(14, 'vkapi_confirmation_token', ''),
-(15, 'admin_id', ''),
-(16, 'start_luck_cnt', '5'),
-(17, 'stat_graph_cnt', '40'),
-(18, 'graph_w', '1250'),
-(19, 'graph_h', '671'),
-(20, 'graph_bg_start', '3014929'),
-(21, 'graph_bg_end', '0'),
-(22, 'graph_frame_color', '8224125'),
-(23, 'graph_x_lines_cnt', '30'),
-(24, 'graph_x_labels_cnt', '10'),
-(25, 'graph_y_lines_cnt', '10'),
-(26, 'graph_title_font_size', '60'),
-(27, 'graph_font', '/var/www/scyk.ru/html/ARIAL.TTF'),
-(28, 'graph_font_size', '12'),
-(29, 'graph_text_color', '16777215'),
-(30, 'graph_line_color', '16711680'),
-(31, 'bot_cmd', '!метр'),
-(32, 'photo_top_count', '5'),
-(33, 'photo_top_font_size', '12'),
-(34, 'photo_top_size', '100'),
-(35, 'small_dick_len', '30'),
-(36, 'stats_graph_font_size', '17'),
-(37, 'gods_cnt', '3'),
-(38, 'gods_graph_cnt', '30'),
-(39, 'bar_chart_bar_width', '90'),
-(40, 'bar_chart_padding', '5'),
-(41, 'daily_bonus_rnd_min', '1'),
-(42, 'daily_bonus_rnd_max', '25');
+INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
+(1, 'dick_len_rnd_min', NULL, '1'),
+(2, 'dick_len_rnd_max', NULL, '20'),
+(3, 'def_dick_len', NULL, '10'),
+(4, 'time_rnd_min', NULL, '1'),
+(5, 'time_rnd_max', NULL, '7200'),
+(6, 'top_count', NULL, '10'),
+(7, 'bonus_dick_len', NULL, '30'),
+(8, 'peer_probe_start', NULL, '1'),
+(9, 'peer_probe_end', NULL, '15'),
+(10, 'cron_work', NULL, 'false'),
+(11, 'vkapi_access_token', NULL, ''),
+(12, 'vkapi_version', NULL, '5.131'),
+(13, 'vkapi_secret_key', NULL, ''),
+(14, 'vkapi_confirmation_token', NULL, ''),
+(15, 'admin_id', NULL, ''),
+(16, 'start_luck_cnt', NULL, '5'),
+(17, 'stat_graph_cnt', NULL, '40'),
+(18, 'graph_w', NULL, '1250'),
+(19, 'graph_h', NULL, '671'),
+(20, 'graph_bg_start', NULL, '3014929'),
+(21, 'graph_bg_end', NULL, '0'),
+(22, 'graph_frame_color', NULL, '8224125'),
+(23, 'graph_x_lines_cnt', NULL, '30'),
+(24, 'graph_x_labels_cnt', NULL, '10'),
+(25, 'graph_y_lines_cnt', NULL, '10'),
+(26, 'graph_title_font_size', NULL, '60'),
+(27, 'graph_font', NULL, '/var/www/scyk.ru/html/ARIAL.TTF'),
+(28, 'graph_font_size', NULL, '12'),
+(29, 'graph_text_color', NULL, '16777215'),
+(30, 'graph_line_color', NULL, '16711680'),
+(31, 'bot_cmd', NULL, '!метр'),
+(32, 'photo_top_count', NULL, '5'),
+(33, 'photo_top_font_size', NULL, '12'),
+(34, 'photo_top_size', NULL, '100'),
+(35, 'small_dick_len', NULL, '30'),
+(36, 'stats_graph_font_size', NULL, '17'),
+(37, 'gods_cnt', NULL, '3'),
+(38, 'gods_graph_cnt', NULL, '30'),
+(39, 'bar_chart_bar_width', NULL, '45'),
+(40, 'bar_chart_padding', NULL, '5'),
+(41, 'daily_bonus_rnd_min', NULL, '1'),
+(42, 'daily_bonus_rnd_max', NULL, '25'),
+(43, 'god_dick_len', NULL, '50'),
+(44, 'DEF_PROBABILITY_PERC_inc', 'inc', '78'),
+(45, 'DEF_PROBABILITY_PERC_dec', 'dec', '17'),
+(46, 'DEF_PROBABILITY_PERC_equ', 'equ', '3'),
+(47, 'DEF_PROBABILITY_PERC_die', 'die', '1'),
+(48, 'DEF_PROBABILITY_PERC_bon', 'bon', '1');
 
 -- --------------------------------------------------------
 
@@ -1267,6 +1279,22 @@ INSERT INTO `icons` (`id`, `data`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int UNSIGNED NOT NULL,
+  `from_id` int UNSIGNED NOT NULL,
+  `msg_id` int UNSIGNED DEFAULT NULL,
+  `peer_id` int UNSIGNED DEFAULT NULL,
+  `date` int NOT NULL,
+  `text` longtext,
+  `object_full` longtext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `peers`
 --
 
@@ -1300,7 +1328,10 @@ INSERT INTO `small_dick_names` (`id`, `name`) VALUES
 (6, 'пупсик'),
 (7, 'малыш'),
 (8, 'петушок'),
-(9, 'писюнчик');
+(9, 'писюнчик'),
+(10, 'клитор'),
+(11, 'чижик'),
+(12, 'кончик');
 
 -- --------------------------------------------------------
 
@@ -1402,6 +1433,15 @@ ALTER TABLE `icons`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `msg_id` (`msg_id`),
+  ADD KEY `peer_id` (`peer_id`),
+  ADD KEY `from_id` (`from_id`);
+
+--
 -- Индексы таблицы `peers`
 --
 ALTER TABLE `peers`
@@ -1447,19 +1487,25 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`
 --
 ALTER TABLE `globals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT для таблицы `icons`
 --
 ALTER TABLE `icons`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1048;
+
+--
+-- AUTO_INCREMENT для таблицы `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `peers`
@@ -1471,7 +1517,7 @@ ALTER TABLE `peers`
 -- AUTO_INCREMENT для таблицы `small_dick_names`
 --
 ALTER TABLE `small_dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT для таблицы `vagina_names`
