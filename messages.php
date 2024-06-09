@@ -79,6 +79,7 @@
 					if ($current_time >= $metr_available) {
 						$act = probabilityRandom2(['inc' => 78, 'dec' => 17, 'equ' => 3, 'die' => 1, 'bon' => 1]);
 						$val = mt_rand(__('@dick_len_rnd_min@'), __('@dick_len_rnd_max@'));
+						$val_save = $val;
 						$time_counter_rnd = mt_rand(__('@time_rnd_min@'), __('@time_rnd_max@'));
 						$statCnt = getStatCnt($from_id);
 												
@@ -128,6 +129,7 @@
 							'USERNAME' => $userName,
 							'DICKNAME' => $dickName,
 							'CM' => getMetr($val),
+							'CM2' => getMetr($val_save),
 							'LEN' => getMetr($len),
 							'BONUS_CM' => getMetr(__('@bonus_dick_len@')),
 							'TIME_LEFT' => getTime($time_left),
