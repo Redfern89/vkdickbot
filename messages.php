@@ -53,10 +53,10 @@
 							'metr_available' => time() -10,
 							'photo_50' => $userData['photo_50'],
 							'photo_100' => $userData['photo_100'],
-							'photo_200' => $userData['photo_200']
+							'photo_200' => $userData['photo_200'],
+							'probabilities' => json_encode(createProbabilities())
 						));
 						insertStat($from_id, $peer_id, __('@def_dick_len@'), __('@def_dick_len@'), 'inc');
-						//$len = (int)__('@def_dick_len@');
 					}					
 					$dick = getDick($from_id);
 					$metr_available = $dick['metr_available'];
@@ -64,6 +64,7 @@
 					$current_time = time();
 					$len = (int)$dick['len'];
 					$sex = $dick['sex'];
+					$probabilities = json_decode($dick['probabilities'], TRUE);
 
 					if ($sex == 'm') {
 						if ($len >= __('@small_dick_len@')) {
@@ -76,7 +77,6 @@
 					}
 
 					if ($current_time >= $metr_available) {
-					//if ($current_time >= 0) {
 						$act = probabilityRandom2(['inc' => 78, 'dec' => 17, 'equ' => 3, 'die' => 1, 'bon' => 1]);
 						$val = mt_rand(__('@dick_len_rnd_min@'), __('@dick_len_rnd_max@'));
 						$time_counter_rnd = mt_rand(__('@time_rnd_min@'), __('@time_rnd_max@'));

@@ -940,6 +940,10 @@
 	function updateDickLen($vkid, $len) {
 		WL_DB_Update('dicks', array('len' => $len), array(['vkid', '=', $vkid]));
 	}
+	
+	function createProbabilities() {
+		return WL_DB_AssocArray('globals', 'lparam', 'value', 'lparam,value', array(['param', 'REGEXP', '^DEF_PROBABILITY_PERC_[a-z]+$']));
+	}
 
 	function CRON_ReloadPeerUsers($peer_id) {
 		$memebers = _vkApi_Call('messages.getConversationMembers', array(
