@@ -805,6 +805,15 @@
 			}
 		}
 	}
+	
+	function godTimeValueCompare($time, $value) {
+		$s = floor($time % 60);
+		$m = floor($time / 60);
+		$h = floor($time / 3600);
+		
+		if ($s == $value || $m == $value || $h == $value) return TRUE;
+		return FALSE;
+	}
 
 	function getMetr($cm) {
 		$signed = FALSE;

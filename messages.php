@@ -103,11 +103,7 @@
 							$len += $val;
 						}
 						
-						$s = floor($time_counter_rnd % 60);
-						$m = floor($time_counter_rnd / 60);
-						$h = floor($time_counter_rnd / 3600);
-						
-						if ($s == $val_save || $m == $val_save || $h == $val_save) {
+						if (godTimeValueCompare($time_counter_rnd, $val_save)) {
 							$act = 'god';
 							$val = (int)__('@god_dick_len@');
 							$len += $val;
