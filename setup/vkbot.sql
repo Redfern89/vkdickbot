@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 09 2024 г., 08:07
+-- Время создания: Июн 11 2024 г., 09:02
 -- Версия сервера: 8.0.36-0ubuntu0.22.04.1
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -42,7 +42,8 @@ CREATE TABLE `dicks` (
   `photo_50` varchar(1000) DEFAULT NULL,
   `photo_100` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `photo_200` varchar(1000) DEFAULT NULL,
-  `probabilities` longtext
+  `probabilities` longtext,
+  `lucky_try` varchar(10) NOT NULL DEFAULT 'false'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -125,7 +126,7 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (46, 'хрен'),
 (47, 'кукан'),
 (48, 'нефритовый стержень'),
-(49, 'детородный орган'),
+(49, 'мудозвон'),
 (50, 'болт'),
 (51, 'конец'),
 (52, 'хрен'),
@@ -139,11 +140,12 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (60, 'смычок'),
 (61, 'хер'),
 (62, 'шишак'),
-(63, 'очинчин'),
+(63, 'пиюлек'),
 (64, 'чижик'),
 (65, 'клитор'),
 (66, 'половой член'),
-(67, 'кончик');
+(67, 'кончик'),
+(68, 'петун');
 
 -- --------------------------------------------------------
 
@@ -189,7 +191,7 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (24, 'graph_x_labels_cnt', NULL, '10'),
 (25, 'graph_y_lines_cnt', NULL, '10'),
 (26, 'graph_title_font_size', NULL, '60'),
-(27, 'graph_font', NULL, '/var/www/scyk.ru/html/ARIAL.TTF'),
+(27, 'graph_font', NULL, 'ARIAL.TTF'),
 (28, 'graph_font_size', NULL, '12'),
 (29, 'graph_text_color', NULL, '16777215'),
 (30, 'graph_line_color', NULL, '16711680'),
@@ -210,7 +212,9 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (45, 'DEF_PROBABILITY_PERC_dec', 'dec', '17'),
 (46, 'DEF_PROBABILITY_PERC_equ', 'equ', '3'),
 (47, 'DEF_PROBABILITY_PERC_die', 'die', '1'),
-(48, 'DEF_PROBABILITY_PERC_bon', 'bon', '1');
+(48, 'DEF_PROBABILITY_PERC_bon', 'bon', '1'),
+(49, 'lucky_rnd_min', NULL, '1'),
+(50, 'lucky_rnd_max', NULL, '59');
 
 -- --------------------------------------------------------
 
@@ -1392,7 +1396,8 @@ INSERT INTO `vagina_names` (`id`, `name`) VALUES
 (30, 'скважина'),
 (31, 'кожаная дверь'),
 (32, 'пизда'),
-(33, 'кунька глубокая');
+(33, 'кунька глубокая'),
+(34, 'петунья');
 
 --
 -- Индексы сохранённых таблиц
@@ -1487,13 +1492,13 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`
 --
 ALTER TABLE `globals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT для таблицы `icons`
@@ -1523,7 +1528,7 @@ ALTER TABLE `small_dick_names`
 -- AUTO_INCREMENT для таблицы `vagina_names`
 --
 ALTER TABLE `vagina_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
