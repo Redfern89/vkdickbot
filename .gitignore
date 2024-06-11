@@ -2,5 +2,5 @@
 *.png
 *.jpeg
 test.php
-logs/log.txt
+logs/*
 copy.sh

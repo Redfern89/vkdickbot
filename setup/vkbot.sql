@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 11 2024 г., 09:02
+-- Время создания: Июн 11 2024 г., 21:17
 -- Версия сервера: 8.0.36-0ubuntu0.22.04.1
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -43,7 +43,8 @@ CREATE TABLE `dicks` (
   `photo_100` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `photo_200` varchar(1000) DEFAULT NULL,
   `probabilities` longtext,
-  `lucky_try` varchar(10) NOT NULL DEFAULT 'false'
+  `lucky_try` varchar(10) NOT NULL DEFAULT 'false',
+  `lucky_val` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -214,7 +215,8 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (47, 'DEF_PROBABILITY_PERC_die', 'die', '1'),
 (48, 'DEF_PROBABILITY_PERC_bon', 'bon', '1'),
 (49, 'lucky_rnd_min', NULL, '1'),
-(50, 'lucky_rnd_max', NULL, '59');
+(50, 'lucky_rnd_max', NULL, '59'),
+(51, 'inactive_users_seconds', NULL, '864000');
 
 -- --------------------------------------------------------
 
@@ -1498,7 +1500,7 @@ ALTER TABLE `dick_names`
 -- AUTO_INCREMENT для таблицы `globals`
 --
 ALTER TABLE `globals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT для таблицы `icons`
