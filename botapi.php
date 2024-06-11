@@ -339,9 +339,7 @@
 	}
 	
 	function metrTopGlobal() {
-		$data = WL_DB_freeQueryAssoc(load_tpl('sql/global_top', array(
-			'NULL' => null
-		)));
+		$data = WL_DB_freeQueryAssoc(load_tpl('sql/global_top'));
 		$result = array();
 		if (!empty($data)) {
 			for ($i = 0; $i < count($data); $i++) {
@@ -405,14 +403,14 @@
 		$data = WL_DB_freeQueryAssoc(load_tpl('sql/inactive_users_capacity'));
 		return isset($data[0]['len']) ? $data[0]['len'] : 0;
 	}
-	
+
 	function getInactiveUsersList() {
 		$data = WL_DB_freeQueryAssoc(load_tpl('sql/inactive_users_list'));
 		$result = array();
 
 		if (!empty($data)) {
 			for ($i = 0; $i < count($data); $i++) {
-				if (!empty($data['nick_name'])) $userName = sprintf('[id%d|%s]', $data['vkid'], $data['nick_name']);
+				if (!empty($data[$i]['nick_name'])) $userName = sprintf('[id%d|%s]', $data[$i]['vkid'], $data[$i]['nick_name']);
 				else $userName = sprintf('[id%d|%s %s]', $data[$i]['vkid'], $data[$i]['first_name'], $data[$i]['last_name']);
 				
 				$result[] = sprintf('%d. %s %s - неактивен %s', 

@@ -93,8 +93,8 @@
 								$val = 0;
 							}
 							if ($act == 'die') {
-								$len = __('@def_dick_len@');
 								$val = ($len - (int)__('@def_dick_len@'));
+								$len = __('@def_dick_len@');
 							}
 							if ($act == 'bon') {
 								$len += __('@bonus_dick_len@');
@@ -110,7 +110,7 @@
 
 						insertStat($from_id, $peer_id, $len, $val, $act);
 						updateDickScores($from_id, $len, $target_time);
-						WL_DB_Update('dicks', array('lucky_try' => 'false'), array(['vkid', '=', $from_id]));
+						WL_DB_Update('dicks', array('lucky_try' => 'false', 'lucky_val' => mt_rand(1, 5)), array(['vkid', '=', $from_id]));
 
 						$dicksAll = WL_DB_GetArray('dicks', 'len');
 						$min = min($dicksAll);
@@ -129,9 +129,12 @@
 							'PROGRESS' => $progress,
 							'PERC' => $perc,
 							'GOD_CM' => getMetr((int)__('@god_dick_len@'))
-						)); 
-
-						_vkApi_messages_Send($peer_id, $msg, keyboard: load_tpl('keyboards/lucky_button', array(
+						));
+						
+						$keyboards = ['lucky_button', 'lucky_buttons'];
+						$keyboard = $keyboards[mt_rand(0, (count($keyboards) -1))];
+						
+						_vkApi_messages_Send($peer_id, $msg, keyboard: load_tpl("keyboards/$keyboard", array(
 							'ID' => $from_id
 						)));
 					} else {
@@ -149,6 +152,14 @@
 							'LEN' => getMetr($len)
 						)));
 					}
+				}
+				
+				if ($cmd == 'тест') {
+					$keyboards = ['lucky_button', 'lucky_buttons'];
+					$keyboard = $keyboards[mt_rand(0, (count($keyboards) -1))];
+					_vkApi_messages_Send($peer_id, 'dfdsfds', keyboard: load_tpl("keyboards/$keyboard", array(
+						'ID' => $from_id
+					)));
 				}
 				
 				if (preg_match('/^пол\s(м|ж)$/siu', $cmd, $cmd_found)) {
@@ -436,7 +447,7 @@
 					$users = getInactiveUsersList();
 					
 					if (!empty($users)) {
-						_vkApi_messages_Send($peer_id, load_tpl('inactive_users', array(
+						_vkApi_messages_Send($peer_id, load_tpl('inactive_users_list', array(
 							'USERS_COLLECTION' => $users,
 							'LEN_CAPACITY' => getMetr(getInactiveUsersCapacity())
 						)));
@@ -649,7 +660,7 @@
 			} // END OF cmd_found
 		} // END of is command
 
-		if (!empty($payload)) {
+		if (!empty($payload)) { // Payload and actions :)
 			$payload = json_decode($payload, TRUE);
 			$act = isset($payload['act']) ? $payload['act'] : NULL;
 			$userData = _vkApi_usersGet($from_id, fields: 'photo_50,photo_100,photo_200')[0];
@@ -660,14 +671,15 @@
 				if (!empty($user['nick_name'])) $userName = sprintf('[id%d|%s]', $from_id, $user['nick_name']);
 			}
 			
-			if ($act == 'push_random_lucky') {
+			if ($act == 'push_random_lucky_btn') {
 				$id = isset($payload['id']) ? $payload['id'] : 0;
 				if (WL_DB_RowExists('dicks', 'vkid', $from_id)) {
 					if ($id == $from_id) {
 						$dick = getDick($from_id);
 						$sex = $dick['sex'];
 						$len = $dick['len'];
-						
+						$chance = isset($payload['chance']) ? $payload['chance'] : 1;
+
 						if ($sex == 'm') {
 							if ($len >= __('@small_dick_len@')) {
 								$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
@@ -678,9 +690,67 @@
 							$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
 						}
 						
+						if ($dick['lucky_try'] == 'false') {
+							if ($dick['lucky_val'] == $chance) {
+								$len += (int)__('@god_dick_len@');
+								_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_chance_win', $sex), array(
+									'USERNAME' => $userName,
+									'DICKNAME' => $dickName,
+									'LEN' => getMetr($len),
+									'CM' => getMetr((int)__('@god_dick_len@'))
+								)));
+								updateDickLen($id, $len);
+								insertStat($id, $peer_id, $len, (int)__('@god_dick_len@'), 'god');
+							} else {
+								_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_chance_fail', $sex), array(
+									'USERNAME' => $userName,
+									'DICKNAME' => $dickName,
+									'LEN' => getMetr($len),
+									'CM' => getMetr((int)__('@god_dick_len@'))
+								)));							
+							}
+							WL_DB_Update('dicks', array('lucky_try' => 'true'), array(['vkid', '=', $id]));
+						} else {
+							_vkApi_messages_Send($peer_id, load_tpl('lucky_try_fail', array(
+								'USERNAME' => $userName
+							)));							
+						}
+						
+					} else {
+						// not for you
+						_vkApi_messages_Send($peer_id, load_tpl('error_button_not_for_you', array(
+							'USERNAME' => $userName
+						)));
+					}
+				} else {
+					// user not found
+					_vkApi_messages_Send($peer_id, load_tpl('error_user_not_found', array(
+						'USERNAME' => $userName
+					)));
+				}
+			}
+			
+			if ($act == 'push_random_lucky') {
+				$id = isset($payload['id']) ? $payload['id'] : 0;
+				if (WL_DB_RowExists('dicks', 'vkid', $from_id)) {
+					if ($id == $from_id) {
+						$dick = getDick($from_id);
+						$sex = $dick['sex'];
+						$len = $dick['len'];
+
+						if ($sex == 'm') {
+							if ($len >= __('@small_dick_len@')) {
+								$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
+							} else {
+								$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
+							}
+						} else if ($sex == 'f') {
+							$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
+						}
+
 						$metr_available = $dick['metr_available'];
 						$last_metr = $dick['last_metr'];
-						
+
 						if ($dick['lucky_try'] == 'false') {
 							$lucky_value = mt_rand((int)__('@lucky_rnd_min@'), (int)__('@lucky_rnd_max@'));
 							$diff_time = $metr_available - $last_metr;
@@ -705,7 +775,7 @@
 									'TIME_LEFT' => getTime($diff_time)
 								)));
 							}
-							
+
 							WL_DB_Update('dicks', array('lucky_try' => 'true'), array(['vkid', '=', $id]));
 						} else {
 							_vkApi_messages_Send($peer_id, load_tpl('lucky_try_fail', array(
