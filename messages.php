@@ -431,6 +431,21 @@
 						)));
 					}
 				}
+				
+				if ($cmd == 'неактив') {
+					$users = getInactiveUsersList();
+					
+					if (!empty($users)) {
+						_vkApi_messages_Send($peer_id, load_tpl('inactive_users', array(
+							'USERS_COLLECTION' => $users,
+							'LEN_CAPACITY' => getMetr(getInactiveUsersCapacity())
+						)));
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('inactive_users_empty', array(
+							'USERNAME' => $userName
+						)));
+					}
+				}
 
 				if (preg_match('/^сброс\s\[id(\d+).*?\]/siu', $cmd, $cmd_found)) {
 					if ($from_id == __('@admin_id@')) {
@@ -708,7 +723,8 @@
 					)));
 				}
 			}
-		}
+			
+		} // END of payload
 
 	} // END of procedure
 ?>

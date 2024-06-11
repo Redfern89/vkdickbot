@@ -400,6 +400,32 @@
 		
 		return implode(PHP_EOL, $result);
 	}
+	
+	function getInactiveUsersCapacity() {
+		$data = WL_DB_freeQueryAssoc(load_tpl('sql/inactive_users_capacity'));
+		return isset($data[0]['len']) ? $data[0]['len'] : 0;
+	}
+	
+	function getInactiveUsersList() {
+		$data = WL_DB_freeQueryAssoc(load_tpl('sql/inactive_users_list'));
+		$result = array();
+
+		if (!empty($data)) {
+			for ($i = 0; $i < count($data); $i++) {
+				if (!empty($data['nick_name'])) $userName = sprintf('[id%d|%s]', $data['vkid'], $data['nick_name']);
+				else $userName = sprintf('[id%d|%s %s]', $data[$i]['vkid'], $data[$i]['first_name'], $data[$i]['last_name']);
+				
+				$result[] = sprintf('%d. %s %s - неактивен %s', 
+					($i +1),
+					$data[$i]['icon_emoji'],
+					$userName,
+					getTime(time() - $data[$i]['last_metr'], false)
+				);
+			}
+		}
+
+		return implode(PHP_EOL, $result);
+	}
 
 	function getMetrTopPhoto($to_browswer=FALSE) {
 		$lengthsCollection = array();
@@ -713,17 +739,25 @@
 		return $arg3;
 	}
 
-	function getTime($time) {
+	function getTime($time, $advanced=TRUE) {
+		//return $time;
 		if ($time <= 59) return sprintf('%d %s', $time, true_wordform($time, 'секунду', 'секунды', 'секунд'));
 		if ($time >= 60 && $time < 3600) {
 			$s = floor($time % 60);
 			$m = floor($time / 60);
 
 			if ($s > 0 && $m > 0) {
-				return sprintf('%d %s и %d %s', 
-					$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
-					$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
-				);
+				if ($advanced) {
+					return sprintf('%d %s и %d %s', 
+						$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
+						$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
+					);
+				} else {
+					return sprintf('%d %s', 
+						$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
+					);
+					
+				}
 			} else if ($m > 0 && $s == 0) {
 				return sprintf('%d %s', $m, true_wordform($m, 'минута', 'минуты', 'минут'));
 			}
@@ -760,47 +794,51 @@
 			$h = floor($time % 86400 / 3600);
 			$d = floor($time / 86400);
 			
-			if ($s > 0 && $m > 0 && $h > 0) {
-				return sprintf('%d %s, %d %s %s %s и %d %s',
-					$d, true_wordform($d, 'день', 'дня', 'дней'),
-					$h, true_wordform($h, 'час', 'часа', 'часов'),
-					$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
-					$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
-				);
-			} else if ($m > 0 && $h > 0 && $s == 0) {
-				return sprintf('%d %s, %d %s и %d %s',
-					$d, true_wordform($d, 'день', 'дня', 'дней'),
-					$h, true_wordform($h, 'час', 'часа', 'часов'),
-					$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
-				);				
-			} else if ($m > 0 && $s > 0 && $m == 0) {
+			if ($advanced) {
+				if ($s > 0 && $m > 0 && $h > 0) {
+					return sprintf('%d %s, %d %s %s %s и %d %s',
+						$d, true_wordform($d, 'день', 'дня', 'дней'),
+						$h, true_wordform($h, 'час', 'часа', 'часов'),
+						$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
+						$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
+					);
+				} else if ($m > 0 && $h > 0 && $s == 0) {
 					return sprintf('%d %s, %d %s и %d %s',
-					$d, true_wordform($d, 'день', 'дня', 'дней'),
-					$h, true_wordform($h, 'час', 'часа', 'часов'),
-					$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
-				);			
-			} else if ($s > 0 && $m > 0 && $h == 0) {
-				return sprintf('%d %s, %s %s и %d %s',
-					$d, true_wordform($d, 'день', 'дня', 'дней'),
-					$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
-					$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
-				);
-			} else if ($m == 0 && $h == 0 && $s > 0) {
-				return sprintf('%d %s и %d %s', 
-					$d, true_wordform($d, 'день', 'дня', 'дней'),
-					$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
-				);
-			} else if ($h == 0 && $s == 0 && $m > 0) {
+						$d, true_wordform($d, 'день', 'дня', 'дней'),
+						$h, true_wordform($h, 'час', 'часа', 'часов'),
+						$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
+					);				
+				} else if ($m > 0 && $s > 0 && $m == 0) {
+						return sprintf('%d %s, %d %s и %d %s',
+						$d, true_wordform($d, 'день', 'дня', 'дней'),
+						$h, true_wordform($h, 'час', 'часа', 'часов'),
+						$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
+					);			
+				} else if ($s > 0 && $m > 0 && $h == 0) {
+					return sprintf('%d %s, %s %s и %d %s',
+						$d, true_wordform($d, 'день', 'дня', 'дней'),
+						$m, true_wordform($m, 'минуту', 'минуты', 'минут'),
+						$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
+					);
+				} else if ($m == 0 && $h == 0 && $s > 0) {
 					return sprintf('%d %s и %d %s', 
-					$d, true_wordform($d, 'день', 'дня', 'дней'),
-					$m, true_wordform($m, 'минуту', 'минуты', 'минут')
-				);	
-			} else if ($m == 0 && $s == 0 && $h > 0) {
-					return sprintf('%d %s и %d %s', 
-					$d, true_wordform($d, 'день', 'дня', 'дней'),
-					$h, true_wordform($h, 'час', 'часа', 'часов')
-				);					
-			} else if ($m == 0 && $h == 0 && $s == 0) {
+						$d, true_wordform($d, 'день', 'дня', 'дней'),
+						$s, true_wordform($s, 'секунду', 'секунды', 'секунд')
+					);
+				} else if ($h == 0 && $s == 0 && $m > 0) {
+						return sprintf('%d %s и %d %s', 
+						$d, true_wordform($d, 'день', 'дня', 'дней'),
+						$m, true_wordform($m, 'минуту', 'минуты', 'минут')
+					);	
+				} else if ($m == 0 && $s == 0 && $h > 0) {
+						return sprintf('%d %s и %d %s', 
+						$d, true_wordform($d, 'день', 'дня', 'дней'),
+						$h, true_wordform($h, 'час', 'часа', 'часов')
+					);					
+				} else if ($m == 0 && $h == 0 && $s == 0) {
+					return sprintf('%d %s', $d, true_wordform($d, 'день', 'дня', 'дней'));
+				}
+			} else {
 				return sprintf('%d %s', $d, true_wordform($d, 'день', 'дня', 'дней'));
 			}
 		}
