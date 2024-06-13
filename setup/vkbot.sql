@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 11 2024 г., 21:17
--- Версия сервера: 8.0.36-0ubuntu0.22.04.1
+-- Время создания: Июн 13 2024 г., 19:57
+-- Версия сервера: 8.0.37-0ubuntu0.22.04.3
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -146,7 +146,9 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (65, 'клитор'),
 (66, 'половой член'),
 (67, 'кончик'),
-(68, 'петун');
+(68, 'петун'),
+(69, 'Вадимин стержень'),
+(70, 'пистон');
 
 -- --------------------------------------------------------
 
@@ -1494,7 +1496,7 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`

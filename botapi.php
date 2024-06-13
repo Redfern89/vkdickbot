@@ -126,6 +126,22 @@
 		}
 		return $result;
 	}
+	
+	function imageProgressBar($img, $x, $y, $w, $h, $color=0xFFFFFF, $textColor=0x0d0d0d, $padding=4, $pos=0, $min=0, $max=100) {
+		imagerectangle($img, $x, $y, ($x + $w), ($y + $h), $color);
+		$progress = map($pos, $min, $max, 1, $w);
+		imagefilledrectangle($img, ($x + $padding), ($y + $padding), ($x + $progress - $padding), ($y + $h - $padding), $color);
+		
+		
+		$perc = map($pos, $min, $max, 0, 100);
+		$text = sprintf('%d%%', $perc);
+		$textBbox = imagettfbbox((int)__('@graph_font_size@'), 0, __('@graph_font@'), $text);
+		$textW = ($textBbox[2] - $textBbox[0]);
+		$textX = $x + $progress - $textW - 6;
+		$textY = ($y + ((int)__('@graph_font_size@'))) + ($h / 2) - (__('@graph_font_size@') / 2) + 1;
+		imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, $textColor, __('@graph_font@'), $text);
+		
+	}
 
 	function getDickStatGraph($vkid, $to_browser=false) {
 		$img = imagecreatetruecolor((int)__('@graph_w@'), (int)__('@graph_h@'));
@@ -156,7 +172,6 @@
 		imagefilledpolygon($img, $points, 3, (int)__('@graph_frame_color@'));
 		$intervalXLines = ((int)__('@graph_w@') - ($paddingLeft + $paddingRight) -1) / ((int)__('@graph_x_lines_cnt@') - 1);
 		$intervalXLabels = ((int)__('@graph_w@') - ($paddingLeft + $paddingRight)) / ((int)__('@graph_x_labels_cnt@') - 1);
-		
 		$intervalYLines = ((int)__('@graph_h@') - ($paddingTop + $paddingBottom)) / ((int)__('@graph_y_lines_cnt@') -1);		
 
 		if (!empty($dickUser)) {
@@ -186,13 +201,26 @@
 			$color = imagecolorallocatealpha($img, 255, 255, 255, 100);
 
 			if (!empty($dickUser['nick_name'])) $title = sprintf('%s (%dсм.)', $dickUser['nick_name'], $dickUser['len']);
-			else $title = sprintf('%s %s (%dсм.)', $dickUser['first_name'], $dickUser['last_name'], $dickUser['len']);
+			else $title = sprintf("%s %s (%dсм.)", $dickUser['first_name'], $dickUser['last_name'], $dickUser['len']);
 
 			$titleBbox = imagettfbbox((int)__('@graph_title_font_size@'), 0, __('@graph_font@'), $title);
 			$titleW    = ($titleBbox[2] - $titleBbox[0]);
 			$x = (int)(((int)__('@graph_w@') / 2) - (($titleBbox[2] - $titleBbox[0]) / 2));
-			$y = (int)(((int)__('@graph_h@') + (int)__('@graph_title_font_size@')) / 2 - ($paddingBottom / 2));
+			$y = (int)(((int)__('@graph_h@') + (int)__('@graph_title_font_size@')) / 2 - ($paddingBottom));
 			imagettftext($img, (int)__('@graph_title_font_size@'), 0, $x, $y, $color, __('@graph_font@'), $title);
+			
+			$pbW = 500;
+			$pbX = (((int)__('@graph_w@') / 2) - ($pbW / 2));
+			
+			$dicksAll = WL_DB_GetArray('dicks', 'len');
+			$pbMin = min($dicksAll);
+			$pbMax = max($dicksAll);
+			$perc = floor($dickUser['len'] * (100 / ($pbMax - $pbMin)));
+			$len = $dickUser['len'];
+			
+			imageProgressBar($img, $pbX, $y + ((int)__('@graph_title_font_size@') / 2), $pbW, 35, pos: $len, min: $pbMin, max: $pbMax, color: $color);
+			
+			imagettftext($img, (int)__('@graph_font_size@'), 0, 10, ((int)__('@graph_font_size@') + 8), $color, __('@graph_font@'), sprintf('Samples: %d', (int)__('@stat_graph_cnt@')));
 
 			$lineW = 10;
 			$lineH = 10;
@@ -509,7 +537,7 @@
 		$paddingInner = 10;
 		
 		$h = ((int)__('@stats_graph_font_size@') * $cnt) + ($textPadding * $cnt) + ($paddingInner * 2);
-		$w = 300;
+		$w = 390;
 		$legend = imagecreatetruecolor($w, $h);
 		imagealphablending($legend, false);
 		imagesavealpha($legend, true);
