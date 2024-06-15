@@ -195,6 +195,7 @@
 				$cnt = 0;
 				$nullLine = TRUE;
 			}
+			//if ($max == $min) $nullLine = TRUE;
 			if ($cnt <= 1) $nullLine = TRUE;
 
 			$color = imagecolorallocatealpha($img, 255, 255, 255, 100);
@@ -214,10 +215,11 @@
 			$dicksAll = WL_DB_GetArray('dicks', 'len');
 			$pbMin = min($dicksAll);
 			$pbMax = max($dicksAll);
-			$perc = floor($dickUser['len'] * (100 / ($pbMax - $pbMin)));
+			if ($pbMin != $pbMax) $perc = floor($dickUser['len'] * (100 / ($pbMax - $pbMin)));
+			else $perc = 100;
 			$len = $dickUser['len'];
 			
-			imageProgressBar($img, $pbX, $y + ((int)__('@graph_title_font_size@') / 2), $pbW, 35, pos: $len, min: $pbMin, max: $pbMax, color: $color);
+			if ($pbMax != $pbMin) imageProgressBar($img, $pbX, $y + ((int)__('@graph_title_font_size@') / 2), $pbW, 35, pos: $len, min: $pbMin, max: $pbMax, color: $color);
 			
 			imagettftext($img, (int)__('@graph_font_size@'), 0, 10, ((int)__('@graph_font_size@') + 8), $color, __('@graph_font@'), sprintf('Samples: %d', $cnt));
 
