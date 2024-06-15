@@ -300,7 +300,9 @@
 				'god' => '@',
 				'doninc' => '*',
 				'dondec' => '/',
-				'rndinc' => '^'
+				'rndinc' => '^',
+				'resinc' => '$',
+				'resdec' => '%'
 			);
 
 			for ($i = 0; $i < $cnt; $i++) {
@@ -668,7 +670,9 @@
 					'god' => '@',
 					'doninc' => '*',
 					'dondec' => '/',
-					'rndinc' => '^'
+					'rndinc' => '^',
+					'resinc' => '$',
+					'resdec' => '%'
 				);
 				
 				for ($i = 0; $i < count($topIDS); $i++) {

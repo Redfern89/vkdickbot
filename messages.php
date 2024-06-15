@@ -7,7 +7,8 @@
 		$payload = isset($msg_obj['payload']) ? $msg_obj['payload'] : NULL;
 
 		if (empty($text) || $from_id == 0 || $from_id < 0) return;
-
+		
+		$userExists = WL_DB_RowExists('dicks', 'vkid', $from_id);
 		$privateMessage = ($peer_id == $from_id) ? TRUE : FALSE;
 		$measureActionCommands = ['измерить', 'измерь', 'померить', 'померь'];
 		$statActionCommands = ['стата', 'стат', 'статистика'];
@@ -117,6 +118,7 @@
 						$max = max($dicksAll);
 						$progress = getTextProgress($len, $min, $max, TRUE);
 						$perc = floor($len * (100 / ($max - $min)));
+						
 						$keyboards = ['lucky_button', 'lucky_buttons'];
 						$keyboard = $keyboards[mt_rand(0, (count($keyboards) -1))];
 						
@@ -155,15 +157,7 @@
 					}
 				}
 				
-				if ($cmd == 'тест') {
-					$keyboards = ['lucky_button', 'lucky_buttons'];
-					$keyboard = $keyboards[mt_rand(0, (count($keyboards) -1))];
-					_vkApi_messages_Send($peer_id, 'dfdsfds', keyboard: load_tpl("keyboards/$keyboard", array(
-						'ID' => $from_id
-					)));
-				}
-				
-				if (preg_match('/^пол\s(м|ж)$/siu', $cmd, $cmd_found)) {
+				if (preg_match('/^пол\s(м|ж)$/siu', $cmd, $cmd_found) && $userExists) {
 					if (isset($cmd_found[1])) {
 						$sex = $cmd_found[1];
 						$sexList = array(
@@ -182,6 +176,78 @@
 								'USERNAME' => $userName,
 								'SEX' => $sexListLang[$sex]
 							)));
+						}
+					}
+				}
+				
+				if ($cmd == 'резерв' && $userExists) {
+					$dick = getDick($from_id);
+					_vkApi_messages_Send($peer_id, load_tpl('your_reserve', array(
+						'USERNAME' => $userName,
+						'RESERVED' => getMetr($dick['reserved'])
+					)));
+				}
+				
+				if (preg_match('/^резерв\s(добавить|взять)\s(\d+)$/siu', $cmd, $cmd_found) && $userExists) {
+					if (isset($cmd_found[1])) {
+						$reservedVal = (int)$cmd_found[2];
+						$action = $cmd_found[1];
+						$dick = getDick($from_id);
+						$len = $dick['len'];
+						$reserved = $dick['reserved'];
+						$error = FALSE;
+						
+						if ($action == 'добавить') {
+							if ($len < $reservedVal) {
+								$error = TRUE;
+								_vkApi_messages_Send($peer_id, load_tpl('error_reserve_push_not_enough', array(
+									'USERNAME' => $userName
+								)));
+							}
+							
+							if (!$error) {
+								$len -= $reservedVal;
+								$reserved += $reservedVal;
+								WL_DB_Update('dicks', array(
+									'len' => $len,
+									'reserved' => $reserved
+								), array(['vkid', '=', $from_id]));
+								insertStat($from_id, $peer_id, $len, $reservedVal, 'resdec');
+								
+								_vkApi_messages_Send($peer_id, load_tpl('reserve_push_action', array(
+									'USERNAME' => $userName,
+									'RESERVEDVAL' => getMetr($reservedVal),
+									'RESERVED' => getMetr($reserved),
+									'LEN' => getMetr($len)
+								)));
+							}
+						}
+						
+						if ($action == 'взять') {
+							if ($reservedVal > $reserved) {
+								$error = true;
+								_vkApi_messages_Send($peer_id, load_tpl('error_reserve_get_not_enough', array(
+									'USERNAME' => $userName,
+									'RESERVED' => getMetr($reserved)
+								)));
+							}
+							
+							if (!$error) {
+								$len += $reservedVal;
+								$reserved -= $reservedVal;
+								WL_DB_Update('dicks', array(
+									'len' => $len,
+									'reserved' => $reserved
+								), array(['vkid', '=', $from_id]));
+								insertStat($from_id, $peer_id, $len, $reservedVal, 'resinc');
+								
+								_vkApi_messages_Send($peer_id, load_tpl('reserve_get_action', array(
+									'USERNAME' => $userName,
+									'RESERVEDVAL' => getMetr($reservedVal),
+									'RESERVED' => getMetr($reserved),
+									'LEN' => getMetr($len)									
+								)));
+							}
 						}
 					}
 				}
@@ -302,7 +368,7 @@
 					}
 				}
 
-				if (preg_match('/^подарить\s\[id(\d+)\|.*?\]\s(\d+)$/siu', $cmd, $cmd_found)) {
+				if (preg_match('/^подарить\s\[id(\d+)\|.*?\]\s(\d+)$/siu', $cmd, $cmd_found) && $userExists) {
 					if (isset($cmd_found[1])) {
 						$id = $cmd_found[1];
 						$error = FALSE;
@@ -376,7 +442,7 @@
 					}
 				}
 
-				if (preg_match('/иконка\s(\d+)/siu', $cmd, $cmd_found)) {
+				if (preg_match('/иконка\s(\d+)/siu', $cmd, $cmd_found) && $userExists) {
 					if (isset($cmd_found[1])) {
 						$icon_id = $cmd_found[1];
 						if ($icon_id >= 1 && $icon_id <= 1047) {
@@ -390,7 +456,7 @@
 					}
 				}				
 
-				if (preg_match('/^ник\s(.*)$/su', $cmd, $cmd_found)) {
+				if (preg_match('/^ник\s(.*)$/su', $cmd, $cmd_found) && $userExists) {
 					if (isset($cmd_found[1])) {
 						$nickname = $cmd_found[1];
 						if (mb_strlen($nickname) >= 2 && mb_strlen($nickname) <= 25) {
@@ -405,7 +471,7 @@
 					}
 				}
 				
-				if ($cmd == 'время') {
+				if ($cmd == 'время' && $userExists) {
 					if (WL_DB_RowExists('dicks', 'vkid', $from_id)) {
 						$dick = getDick($from_id);
 						$metr_available = $dick['metr_available'];

@@ -1,0 +1,1 @@
+%{USERNAME}%, твой резерв: %{RESERVED}%
