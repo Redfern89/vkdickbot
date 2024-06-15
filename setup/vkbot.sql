@@ -195,11 +195,11 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (8, 'peer_probe_start', NULL, '1'),
 (9, 'peer_probe_end', NULL, '15'),
 (10, 'cron_work', NULL, 'false'),
-(11, 'vkapi_access_token', NULL, 'vk1.a.R_FDJAlI5GOW3pNpUsrQfVps-WndrsKs8-0PuMspbsEuKhb3fTlgOpd-lg4XStsYZS-qy4y4vECQzaazzHPJeUHEzLuSbjP-b1wu1lCQbr-Wd1Svk8BQCEJaFOnssbtz5sfdBlaSlkT654-E9X-wDptj_EYNaAcC_C7BaLCIaSSKRvhbIfWhPJfgjF-Gll_mobPJFXcBlxwG1NS4dH9PMQ'),
+(11, 'vkapi_access_token', NULL, ''),
 (12, 'vkapi_version', NULL, '5.131'),
-(13, 'vkapi_secret_key', NULL, 'kCFdl8UpZwGdvc5VbqXApf3qpeHicf2A'),
-(14, 'vkapi_confirmation_token', NULL, '140df6d5'),
-(15, 'admin_id', NULL, '220887949'),
+(13, 'vkapi_secret_key', NULL, ''),
+(14, 'vkapi_confirmation_token', NULL, ''),
+(15, 'admin_id', NULL, ''),
 (16, 'start_luck_cnt', NULL, '5'),
 (17, 'stat_graph_cnt', NULL, '40'),
 (18, 'graph_w', NULL, '1250'),
@@ -211,7 +211,7 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (24, 'graph_x_labels_cnt', NULL, '10'),
 (25, 'graph_y_lines_cnt', NULL, '10'),
 (26, 'graph_title_font_size', NULL, '60'),
-(27, 'graph_font', NULL, '/var/www/scyk.ru/html/ARIAL.TTF'),
+(27, 'graph_font', NULL, 'ARIAL.TTF'),
 (28, 'graph_font_size', NULL, '12'),
 (29, 'graph_text_color', NULL, '16777215'),
 (30, 'graph_line_color', NULL, '16711680'),
@@ -236,7 +236,7 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (49, 'lucky_rnd_min', NULL, '1'),
 (50, 'lucky_rnd_max', NULL, '59'),
 (51, 'inactive_users_seconds', NULL, '864000'),
-(52, 'vkapi_cron_acces_token', NULL, 'OWe2fzb3nUw_1sx1PqrNd3Y6H6fa2T3cJq7FoFc_Ryo7zFl_zD4YfcuJGQeluyh4o4xXoEaWuyQWKDWb_i7MixcFGAIEtUsS8Ec6Gy_m8ZAUikYoMw');
+(52, 'vkapi_cron_acces_token', NULL, '');
 
 -- --------------------------------------------------------
 

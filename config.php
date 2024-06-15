@@ -5,7 +5,7 @@
 	$cfg_array[0] = array(
 		'SQL_USER' => 'vkbot',
 		'SQL_HOST' => 'localhost',
-		'SQL_PASS' => 'password000',
+		'SQL_PASS' => '',
 		'SQL_DB' => 'vkbot',
 	);
 	
