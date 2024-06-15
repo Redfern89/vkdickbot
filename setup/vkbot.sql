@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 13 2024 г., 19:57
+-- Время создания: Июн 15 2024 г., 08:46
 -- Версия сервера: 8.0.37-0ubuntu0.22.04.3
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -24,6 +24,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `api_log`
+--
+
+CREATE TABLE `api_log` (
+  `id` int UNSIGNED NOT NULL,
+  `method` varchar(255) NOT NULL,
+  `request_data` longtext,
+  `response_data` longtext,
+  `date` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `dicks`
 --
 
@@ -37,6 +51,7 @@ CREATE TABLE `dicks` (
   `icon` int UNSIGNED NOT NULL,
   `peer_id` int NOT NULL,
   `len` int NOT NULL,
+  `reserved` int DEFAULT NULL,
   `last_metr` int NOT NULL,
   `metr_available` int DEFAULT NULL,
   `photo_50` varchar(1000) DEFAULT NULL,
@@ -148,7 +163,9 @@ INSERT INTO `dick_names` (`id`, `name`) VALUES
 (67, 'кончик'),
 (68, 'петун'),
 (69, 'Вадимин стержень'),
-(70, 'пистон');
+(70, 'пистон'),
+(71, 'пенис'),
+(72, 'фаллос');
 
 -- --------------------------------------------------------
 
@@ -178,11 +195,11 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (8, 'peer_probe_start', NULL, '1'),
 (9, 'peer_probe_end', NULL, '15'),
 (10, 'cron_work', NULL, 'false'),
-(11, 'vkapi_access_token', NULL, ''),
+(11, 'vkapi_access_token', NULL, 'vk1.a.R_FDJAlI5GOW3pNpUsrQfVps-WndrsKs8-0PuMspbsEuKhb3fTlgOpd-lg4XStsYZS-qy4y4vECQzaazzHPJeUHEzLuSbjP-b1wu1lCQbr-Wd1Svk8BQCEJaFOnssbtz5sfdBlaSlkT654-E9X-wDptj_EYNaAcC_C7BaLCIaSSKRvhbIfWhPJfgjF-Gll_mobPJFXcBlxwG1NS4dH9PMQ'),
 (12, 'vkapi_version', NULL, '5.131'),
-(13, 'vkapi_secret_key', NULL, ''),
-(14, 'vkapi_confirmation_token', NULL, ''),
-(15, 'admin_id', NULL, ''),
+(13, 'vkapi_secret_key', NULL, 'kCFdl8UpZwGdvc5VbqXApf3qpeHicf2A'),
+(14, 'vkapi_confirmation_token', NULL, '140df6d5'),
+(15, 'admin_id', NULL, '220887949'),
 (16, 'start_luck_cnt', NULL, '5'),
 (17, 'stat_graph_cnt', NULL, '40'),
 (18, 'graph_w', NULL, '1250'),
@@ -194,7 +211,7 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (24, 'graph_x_labels_cnt', NULL, '10'),
 (25, 'graph_y_lines_cnt', NULL, '10'),
 (26, 'graph_title_font_size', NULL, '60'),
-(27, 'graph_font', NULL, 'ARIAL.TTF'),
+(27, 'graph_font', NULL, '/var/www/scyk.ru/html/ARIAL.TTF'),
 (28, 'graph_font_size', NULL, '12'),
 (29, 'graph_text_color', NULL, '16777215'),
 (30, 'graph_line_color', NULL, '16711680'),
@@ -218,7 +235,8 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (48, 'DEF_PROBABILITY_PERC_bon', 'bon', '1'),
 (49, 'lucky_rnd_min', NULL, '1'),
 (50, 'lucky_rnd_max', NULL, '59'),
-(51, 'inactive_users_seconds', NULL, '864000');
+(51, 'inactive_users_seconds', NULL, '864000'),
+(52, 'vkapi_cron_acces_token', NULL, 'OWe2fzb3nUw_1sx1PqrNd3Y6H6fa2T3cJq7FoFc_Ryo7zFl_zD4YfcuJGQeluyh4o4xXoEaWuyQWKDWb_i7MixcFGAIEtUsS8Ec6Gy_m8ZAUikYoMw');
 
 -- --------------------------------------------------------
 
@@ -1408,6 +1426,12 @@ INSERT INTO `vagina_names` (`id`, `name`) VALUES
 --
 
 --
+-- Индексы таблицы `api_log`
+--
+ALTER TABLE `api_log`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `dicks`
 --
 ALTER TABLE `dicks`
@@ -1481,6 +1505,12 @@ ALTER TABLE `vagina_names`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `api_log`
+--
+ALTER TABLE `api_log`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT для таблицы `dicks`
 --
 ALTER TABLE `dicks`
@@ -1496,13 +1526,13 @@ ALTER TABLE `dicks_stats`
 -- AUTO_INCREMENT для таблицы `dick_names`
 --
 ALTER TABLE `dick_names`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT для таблицы `globals`
 --
 ALTER TABLE `globals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT для таблицы `icons`
