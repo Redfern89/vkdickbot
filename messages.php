@@ -116,8 +116,13 @@
 						$dicksAll = WL_DB_GetArray('dicks', 'len');
 						$min = min($dicksAll);
 						$max = max($dicksAll);
-						$progress = getTextProgress($len, $min, $max, TRUE);
-						$perc = floor($len * (100 / ($max - $min)));
+						if ($min == $max) {
+							$progress =  getTextProgress($len, 0, $len, TRUE);
+							$perc = 100;
+						} else {
+							$progress = getTextProgress($len, $min, $max, TRUE);
+							$perc = floor($len * (100 / ($max - $min)));							
+						}
 						
 						$keyboards = ['lucky_button', 'lucky_buttons'];
 						$keyboard = $keyboards[mt_rand(0, (count($keyboards) -1))];

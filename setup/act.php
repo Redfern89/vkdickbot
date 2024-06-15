@@ -19,7 +19,20 @@
 			$result = mysqli_multi_query($sql, $sql_query);
 			$sql -> close();
 			
-			__redirect('/setup?step=vkapi');
+			define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']);
+			
+			require_once '../botapi.php';
+			$configFile = load_tpl('config_php', array(
+				'SQL_USER' => $mysql_user,
+				'SQL_PASS' => $mysql_pass,
+				'SQL_HOST' => $mysql_host,
+				'SQL_DB' => $mysql_db,
+			));
+			
+			echo $configFile;
+			file_put_contents('../config.php', $configFile);
+			
+			__redirect('/setup?step=dir');
 			
 		} catch (Exception $e) {
 			$_SESSION['sql_errno'] = $e -> getCode();;
@@ -49,7 +62,7 @@
 					$_SESSION['dir_error'] = implode('<br />', $errors);
 					__redirect('/setup?step=dir&fail');
 				} else {
-					
+					__redirect('/setup?step=vkapi');
 				}
 				
 			} else {
@@ -61,5 +74,47 @@
 			$_SESSION['dir_error'] = $e -> getMessage();
 			__redirect('/setup?step=dir&fail');			
 		}
+	}
+	
+	
+	if ($act == 'confirmation_token_setup') {
+		define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']);
+		require_once '../bootstrap.php';
+		
+		updateGlobal('vkapi_confirmation_token', @$_POST['vkapi_confirmation_token']);
+		__redirect('/setup?step=vkapi');
+		
+		$sql -> close();
+	}
+	
+	if ($act == 'vkapi_keys_setup') {
+		define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']);
+		require_once '../bootstrap.php';
+		
+		$vkapi_access_token = @$_POST['vkapi_access_token'];
+		$vkapi_secret_key = @$_POST['vkapi_secret_key'];
+		
+		updateGlobal('vkapi_access_token', $vkapi_access_token);
+		updateGlobal('vkapi_secret_key', $vkapi_secret_key);
+		
+		__redirect('/setup?step=vkapi');
+		
+		$_SESSION['vkapi_keys_ok'] = true;
+		
+		$sql -> close();
+	}
+	
+	if ($act == 'admin_setup') {
+		define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']);
+		require_once '../bootstrap.php';
+		$admin_id = @$_POST['admin_id'];
+		$admin = _vkApi_usersGet($admin_id, fields: 'screen_name');
+		$adminData = $admin[0];
+		
+		$admin_Link = sprintf('<a href="https://vk.com/%s" target="_blank">%s %s</a>', $adminData['screen_name'], $adminData['first_name'], $adminData['last_name']);
+		$_SESSION['admin_link'] = $admin_Link;
+		updateGlobal('admin_id', $admin_id);
+		$sql -> close();
+		__redirect('/setup?step=admin_settings');
 	}
 ?>
