@@ -1,15 +1,22 @@
 <?php
 
 	// Функция для работы с VK API
-	function _vkApi_Call($method, $params = []) {
+	function _vkApi_Call($method, $params = [], $cron=FALSE) {
 		$params['v'] = __('@vkapi_version@');
-		$params['access_token'] = __('@vkapi_access_token@'); // Передача access_token
+		
+		if (!$cron) $params['access_token'] = __('@vkapi_access_token@');
+		else $params['access_token'] = __('@vkapi_cron_acces_token@');
+		
+		
 		$url = sprintf('https://api.vk.com/method/%s', $method); // URL для отсылки данных на сервер ВК
 		$data = __http_request($url, $params);
 		
-		__log('Запрос: ' . $method, $url);
-		__log('Параметры запроса: ' . $method, http_build_query($params));
-		__log('Ответ: ' . $method, $data);
+		WL_DB_Insert('api_log', array(
+			'method' => $method,
+			'request_data' => http_build_query($params),
+			'response_data' => $data,
+			'date' => time()
+		));
 		
 		$data = json_decode($data, TRUE);
 		

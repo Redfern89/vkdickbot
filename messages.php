@@ -117,6 +117,8 @@
 						$max = max($dicksAll);
 						$progress = getTextProgress($len, $min, $max, TRUE);
 						$perc = floor($len * (100 / ($max - $min)));
+						$keyboards = ['lucky_button', 'lucky_buttons'];
+						$keyboard = $keyboards[mt_rand(0, (count($keyboards) -1))];
 						
 						$msg = load_tpl(sprintf('%s_dick_action_%s', $sex, $act), array(
 							'USERNAME' => $userName,
@@ -128,11 +130,10 @@
 							'TIME_LEFT' => getTime($time_left),
 							'PROGRESS' => $progress,
 							'PERC' => $perc,
-							'GOD_CM' => getMetr((int)__('@god_dick_len@'))
+							'LUCKY_FOOTER' => load_tpl(sprintf('%s_footer', $keyboard), array(
+								'GOD_CM' => getMetr((int)__('@god_dick_len@'))
+							))
 						));
-						
-						$keyboards = ['lucky_button', 'lucky_buttons'];
-						$keyboard = $keyboards[mt_rand(0, (count($keyboards) -1))];
 						
 						_vkApi_messages_Send($peer_id, $msg, keyboard: load_tpl("keyboards/$keyboard", array(
 							'ID' => $from_id

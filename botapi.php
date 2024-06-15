@@ -128,17 +128,16 @@
 	}
 	
 	function imageProgressBar($img, $x, $y, $w, $h, $color=0xFFFFFF, $textColor=0x0d0d0d, $padding=4, $pos=0, $min=0, $max=100) {
+		$progressPos = map($pos, $min, $max, 1, $w);
 		imagerectangle($img, $x, $y, ($x + $w), ($y + $h), $color);
-		$progress = map($pos, $min, $max, 1, $w);
-		imagefilledrectangle($img, ($x + $padding), ($y + $padding), ($x + $progress - $padding), ($y + $h - $padding), $color);
-		
+		imagefilledrectangle($img, ($x + $padding), ($y + $padding), ($x + $progressPos - $padding), ($y + $h - $padding), $color);
 		
 		$perc = map($pos, $min, $max, 0, 100);
 		$text = sprintf('%d%%', $perc);
 		$textBbox = imagettfbbox((int)__('@graph_font_size@'), 0, __('@graph_font@'), $text);
 		$textW = ($textBbox[2] - $textBbox[0]);
-		$textX = $x + $progress - $textW - 6;
-		$textY = ($y + ((int)__('@graph_font_size@'))) + ($h / 2) - (__('@graph_font_size@') / 2) + 1;
+		$textX = $x + $progressPos - $textW - 6;
+		$textY = ($y + ((int)__('@graph_font_size@'))) + ($h / 2) - ((int)__('@graph_font_size@') / 2) + 1;
 		imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, $textColor, __('@graph_font@'), $text);
 		
 	}
@@ -220,7 +219,7 @@
 			
 			imageProgressBar($img, $pbX, $y + ((int)__('@graph_title_font_size@') / 2), $pbW, 35, pos: $len, min: $pbMin, max: $pbMax, color: $color);
 			
-			imagettftext($img, (int)__('@graph_font_size@'), 0, 10, ((int)__('@graph_font_size@') + 8), $color, __('@graph_font@'), sprintf('Samples: %d', (int)__('@stat_graph_cnt@')));
+			imagettftext($img, (int)__('@graph_font_size@'), 0, 10, ((int)__('@graph_font_size@') + 8), $color, __('@graph_font@'), sprintf('Samples: %d', $cnt));
 
 			$lineW = 10;
 			$lineH = 10;
