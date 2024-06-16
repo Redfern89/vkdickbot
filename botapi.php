@@ -1105,6 +1105,15 @@
 					$template = str_replace('@{' . $found[1][$i] . '}@', __('@' . $found[1][$i] . '@'), $template);
 				}
 			}
+			preg_match_all('/%\[(.*?)\]%/siu', $template, $found);
+			if (isset($found[1])) {
+				for ($i = 0; $i < count($found[1]); $i++) {
+					$vars = $found[1][$i];
+					$vars = explode('|', $vars);
+					$var = $vars[mt_rand(0, count($vars) -1)];
+					$template = str_replace('%[' . $found[1][$i] . ']%', $var, $template);
+				}				
+			}
 			$template = preg_replace('/\%\{.*?\}\%/', '', $template);
 		} else {
 			die ("Template $tpl.tpl not found");
