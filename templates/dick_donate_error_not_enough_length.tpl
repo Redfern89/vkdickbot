@@ -1,1 +1,1 @@
-%{USERNAME}%, ты не можешь подарить пользователю %{TO_USERNAME}% %{DONATE_LEN}%, тебе не хватает %{LEN_LEFT}%, твой размер %{MY_LEN}%
+%{USERNAME}%, %[❌|✋🏻|⛔|🛇|🚫]%ты не можешь подарить пользователю %{TO_USERNAME}% %{DONATE_LEN}%, тебе не хватает %{LEN_LEFT}%, твой размер %{MY_LEN}%

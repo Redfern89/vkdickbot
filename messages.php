@@ -26,7 +26,7 @@
 		if (preg_match(sprintf('/^%s\s(.*)$/siu', __('@bot_cmd@')), $text, $found)) {
 			if (isset($found[1])) {
 				$cmd = $found[1];
-				$userData = _vkApi_usersGet($from_id, fields: 'photo_50,photo_100,photo_200')[0];
+				$userData = _vkApi_usersGet($from_id, fields: __('@vkapi_users_fields@'))[0];
 				$userName = sprintf('[id%d|%s]', $from_id, $userData['first_name']);
 
 				if (WL_DB_RowExists('dicks', 'vkid', $from_id)) {
@@ -43,22 +43,7 @@
 				if (in_array(mb_strtolower($cmd), $measureActionCommands)) {
 					insertTaxonomy($peer_id, $from_id);
 					if (!WL_DB_RowExists('dicks', 'vkid', $from_id)) {
-						WL_DB_Insert('dicks', array(
-							'vkid' => $from_id,
-							'first_name' => $userData['first_name'],
-							'last_name' => $userData['last_name'],
-							'icon' => mt_rand(1, 1047),
-							'peer_id' => $peer_id,
-							'last_metr' => time(),
-							'len' => __('@def_dick_len@'),
-							'sex' => 'm',
-							'metr_available' => time() -10,
-							'lucky_try' => 'false',
-							'photo_50' => $userData['photo_50'],
-							'photo_100' => $userData['photo_100'],
-							'photo_200' => $userData['photo_200'],
-							'probabilities' => json_encode(createProbabilities())
-						));
+						addUser($userData);
 						insertStat($from_id, $peer_id, __('@def_dick_len@'), __('@def_dick_len@'), 'inc');
 					}					
 					$dick = getDick($from_id);
@@ -67,6 +52,8 @@
 					$current_time = time();
 					$len = (int)$dick['len'];
 					$sex = $dick['sex'];
+					$counter_min = $dick['counter_min'];
+					$counter_max = $dick['counter_max'];
 					$probabilities = json_decode($dick['probabilities'], TRUE);
 
 					if ($sex == 'm') {
@@ -83,7 +70,7 @@
 						$act = probabilityRandom2($probabilities);
 						$val = mt_rand(__('@dick_len_rnd_min@'), __('@dick_len_rnd_max@'));
 						$val_save = $val;
-						$time_counter_rnd = mt_rand(__('@time_rnd_min@'), __('@time_rnd_max@'));
+						$time_counter_rnd = mt_rand($counter_min, $counter_max);
 						$statCnt = getStatCnt($from_id);
 
 						if ($statCnt >= __('@start_luck_cnt@')) {
@@ -171,16 +158,18 @@
 						);
 						$sex = $sexList[$sex];
 						$sexListLang = array(
-							'm' => 'мужской',
-							'f' => 'женский'
+							'm' => 'мужской 👨',
+							'f' => 'женский 👩'
 						);
 						
-						if (WL_DB_RowExists('dicks', 'vkid', $from_id)) {
+						if (WL_DB_RowExists('dicks', 'vkid', $from_id) && in_array($sex, $sexList)) {
 							WL_DB_Update('dicks', array('sex' => $sex), array(['vkid', '=', $from_id]));
 							_vkApi_messages_Send($peer_id, load_tpl('change_sex', array(
 								'USERNAME' => $userName,
 								'SEX' => $sexListLang[$sex]
 							)));
+						} else {
+							_vkApi_messages_Send($peer_id, load_tpl('fail'));
 						}
 					}
 				}
@@ -305,6 +294,40 @@
 					}
 				}
 				
+				if ($cmd == 'кто я' && $userExists) {
+					getMyDiagram($from_id);
+					$dick = getDick($from_id);
+					$file = DOCROOT . '/my_stats_graphs/' . $from_id . '.png';
+					if (file_exists($file)) {
+						$photo = _vkApi_CreatePhotoAttachment($peer_id, $file, 'image/png');
+						if (!empty($photo)) {
+							
+							if (!empty($dick['nick_name'])) {
+								$userName = sprintf('[id%d|%s]', $dick['vkid'], $dick['nick_name']);
+							} else {
+								$userName = sprintf('[id%d|%s %s]', $dick['vkid'], $dick['first_name'], $dick['last_name']);
+							}
+							
+							_vkApi_messages_Send($peer_id, load_tpl('whois_you', array(
+								'USERNAME' => $userName,
+								'DATE' => date('d.m.Y', $dick['regdate']),
+								'COUNT' => WL_DB_getCount('dicks_stats', where: array(['vkid', '=', $from_id])),
+								'SEX' => __(sprintf('@sex_%s@', $dick['sex'])),
+								'LEN' => getMetr($dick['len']),
+								'RESERVED' => getMetr($dick['reserved'])
+							)), attachment: $photo);
+						} else {
+							_vkApi_messages_Send($peer_id, load_tpl('fail', array(
+								'USERNAME' => $userName
+							)));
+						}
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('fail', array(
+							'USERNAME' => $userName
+						)));		
+					}
+				}
+				
 				if (preg_match('/^стата?\s\[id(\d+)\|.*?\]$/siu', $cmd, $cmd_found)) {
 					if (isset($cmd_found[1])) {
 						$id = (int)$cmd_found[1];
@@ -364,7 +387,7 @@
 								}
 							}
 						}
-						
+
 						$photo = _vkApi_CreatePhotoAttachment($peer_id, $file, 'image/png');
 						_vkApi_messages_Send($peer_id, load_tpl('gods', array(
 							'USERNAME' => $userName,
@@ -687,6 +710,80 @@
 						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
 							'USERNAME' => $userName
 						)));						
+					}
+				}
+				
+				if (preg_match('/^get_user_field\s\[id(\d+)\|(.*?)\]\s(.*)$/siu', $cmd, $cmd_found)) {
+					if ($from_id == __('@admin_id@')) {
+						if (isset($cmd_found[1])) {
+							$id = $cmd_found[1];
+							$user = $cmd_found[2];
+							$field = $cmd_found[3];
+							if (WL_DB_RowExists('dicks', 'vkid', $id)) {
+								$fields = WL_DB_getTableFields('dicks');
+								if (in_array($field, $fields)) {
+									_vkApi_messages_Send($peer_id, load_tpl('user_field_get', array(
+										'USERNAME' => $userName,
+										'FIELD' => $field,
+										'USER' => sprintf('[id%d|%s]', $id, $user),
+										'VALUE' => WL_DB_getField('dicks', $field, where: array(['vkid', '=', $id]))
+									)));
+								} else {
+									_vkApi_messages_Send($peer_id, load_tpl('error_field_not_found', array(
+										'USERNAME' => $userName,
+										'FIELD' => $field
+									)));
+								}
+							} else {
+								_vkApi_messages_Send($peer_id, load_tpl('error_user_not_found', array(
+									'USERNAME' => $userName
+								)));
+							}
+						} else {
+							_vkApi_messages_Send($peer_id, load_tpl('fail'));
+						}
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));							
+					}
+				}
+				
+				if (preg_match('/^set_user_field\s\[id(\d+)\|(.*?)\]\s(.*)\s(.*)$/siu', $cmd, $cmd_found)) {
+					if ($from_id == __('@admin_id@')) {
+						if (isset($cmd_found[1])) {
+							$id = $cmd_found[1];
+							$user = $cmd_found[2];
+							$field = $cmd_found[3];
+							$value = $cmd_found[4];
+							if (WL_DB_RowExists('dicks', 'vkid', $id)) {
+								$fields = WL_DB_getTableFields('dicks');
+								if (in_array($field, $fields)) {
+									WL_DB_Update('dicks', array($field => $value), array(['vkid', '=', $id]));
+									_vkApi_messages_Send($peer_id, load_tpl('user_field_set', array(
+										'USERNAME' => $userName,
+										'FIELD' => $field,
+										'USER' => sprintf('[id%d|%s]', $id, $user),
+										'VALUE' => $value
+									)));
+								} else {
+									_vkApi_messages_Send($peer_id, load_tpl('error_field_not_found', array(
+										'USERNAME' => $userName,
+										'FIELD' => $field
+									)));
+								}
+							} else {
+								_vkApi_messages_Send($peer_id, load_tpl('error_user_not_found', array(
+									'USERNAME' => $userName
+								)));
+							}
+						} else {
+							_vkApi_messages_Send($peer_id, load_tpl('fail'));
+						}
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));							
 					}
 				}
 				

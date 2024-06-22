@@ -1,1 +1,1 @@
-%{USERNAME}%, тебе осталось ждать %{TIMELEFT}%
+%{USERNAME}%, ⌛тебе осталось ждать %{TIMELEFT}%

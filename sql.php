@@ -29,6 +29,20 @@
 		return $sql -> real_escape_string($string);
 	}
 	
+	function WL_DB_getTableFields($table) {
+		$table = WL_DB_EscapeString($table);
+		$table = '`' . WL_DB . "`.`$table`";
+		$ch = WL_DB_QUERY(sprintf('DESCRIBE %s;', $table));
+		$result = array();
+
+		while ($row = $ch -> fetch_assoc()) {
+			$result[] = $row['Field'];
+		}
+		$ch -> close();
+
+		return $result;
+	}
+	
 	function WL_DB_CleanTable($table) {
 		return WL_DB_QUERY('TRUNCATE `' . WL_DB . '`.`' . WL_DB_EscapeString($table) . '`;');
 	}
@@ -404,21 +418,17 @@
 				$field = WL_DB_EscapeString($field);
 				$value = WL_DB_EscapeString($value);
 				
-				if (empty($value)) {
-					$rows_collection[] = '0';
-				}else if (is_integer($value) && $value == 0) {
-					$rows_collection[] = '0';
-				} else if ($value == 'NULL') {
-					$rows_collection[] = 'NULL';
-				} else {
-					$rows_collection[] = "'$value'";
-				}
-
+				if (is_string($value) && !empty($value)) $rows_collection[] = sprintf('\'%s\'', $value);
+				if (is_integer($value)) $rows_collection[] = $value;
+				if (is_null($value)) $rows_collection[] = 'NULL';
+				if (is_string($value) && empty($value)) $rows_collection[] = 'NULL';
+				
 				$fields_collection[] = "`$field`";
 			}
 		}
 		
 		$q = 'INSERT INTO `' . WL_DB . "`.`$table` (" . implode(', ', $fields_collection) . ') VALUES (' . implode(', ', $rows_collection) . ')';
+
 		if (!$echo) {
 			WL_DB_QUERY($q);
 		} else {

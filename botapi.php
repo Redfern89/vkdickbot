@@ -85,6 +85,18 @@
 		return ($x - $in_min) * ($out_max - $out_min) / ($in_max - $in_min) + $out_min;
 	}
 
+	function shortInt($int) {
+		$result = $int;
+		
+		if ($int >= 1000) {// && $int <= 9999) {
+			$result = sprintf('%.02fK', ($int / 1000));
+		} //else if ($int >= 10000 && $int <= 99999) {
+			//$result = sprintf('%.01fK', ($int / 1000));
+		//}
+		
+		return $result;
+	}
+
 	function image_gradientrect2($img, $x, $y, $w, $h, $start, $end) {
 		if ($x > $w || $y > $h) return FALSE;
 
@@ -146,11 +158,17 @@
 		$img = imagecreatetruecolor((int)__('@graph_w@'), (int)__('@graph_h@'));
 		imageantialias($img, true);
 		image_gradientrect2($img, 0, 0, (int)__('@graph_w@'), (int)__('@graph_h@'), (int)__('@graph_bg_start@'), (int)__('@graph_bg_end@'));
+
+		$clouds = imagecreatefrompng(DOCROOT . '/images/clouds-png-13378.png');
+		imagesavealpha($clouds, TRUE);
+		imagecopyresampled($img, $clouds, 0, 0, 0, 0, (int)__('@graph_w@'), (int)__('@graph_h@'), imagesx($clouds), imagesy($clouds));
+		imagedestroy($clouds);
+
 		$dickUser = WL_DB_GetRow('dicks', where: array(['vkid', '=', $vkid]));
 		$data = array();
 		$dataSet = array();
 
-		$paddingLeft = 60;
+		$paddingLeft = 70;
 		$paddingRight = 20;
 		$paddingBottom = 90;
 		$paddingTop = 40;
@@ -267,7 +285,8 @@
 				if ($i == (int)__('@graph_y_lines_cnt@') -1) $lbl = $max;
 				if ($i >= 1 && $i <= ((int)__('@graph_y_lines_cnt@') -2)) 
 					$lbl = ($i * ($max - $min) / ((int)__('@graph_y_lines_cnt@') -1)) + $min;
-				$lbl = sprintf('%.1f', $lbl);
+				if ($lbl >= 1000) $lbl = shortInt($lbl);
+				else $lbl = sprintf('%.1f', $lbl);
 				$labelsY[] = $lbl;
 			}
 			$labelsY = array_reverse($labelsY);
@@ -283,7 +302,7 @@
 				}
 				$bbox = imagettfbbox((int)__('@graph_font_size@'), 0, __('@graph_font@'), $labelsY[$i]);
 				$textY = $y1 - (($bbox[5] + $bbox[3]) / 2);
-				$textX = ($x1 - ((int)__('@graph_font_size@') * 3)) - 10;	
+				$textX = ($x1 - ((int)__('@graph_font_size@') * 3)) - 20;	
 				imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, (int)__('@graph_text_color@'), __('@graph_font@'), $labelsY[$i]);
 			}
 
@@ -569,12 +588,142 @@
 		imagedestroy($img);
 	}
 	
+	function barChart($img, $x, $y, $barW, $barH, $rectColor, $topEllipseColor, $bottomEllipseColor) {
+		imagefilledrectangle($img, $x, $y, ($x + $barW), (int)($barH - (($barW / 2) / 2) + $y), $rectColor);
+		imagefilledellipse($img, (int)($x + ($barW / 2)), ($barH - ($barW / 2) / 2) + $y, $barW, (int)($barW / 6), $bottomEllipseColor);
+		imagefilledellipse($img, (int)($x + ($barW / 2)), $y, $barW, (int)($barW / 5), $topEllipseColor);
+	}
+	
+	function getMyDiagram($vkid, $to_browser=FALSE) {
+		$paddingLeft = 70;
+		$paddingRight = 50;
+		$paddingBottom = 30;
+		$paddingTop = 40;
+		
+		$data = WL_DB_freeQueryAssoc(load_tpl('sql/last_stat_grp', array(
+			'ID' => $vkid
+		)));
+		
+		$dataCnt = count($data);
+		$barW = __('@bar_chart_bar_width@');
+		$spacing = ((int)__('@bar_chart_bar_width@') / 2);
+		$w = (int)(($dataCnt * ((int)__('@bar_chart_bar_width@'))) + ($dataCnt * $spacing) + ($paddingLeft + $paddingRight));
+		$h = 650 + $paddingBottom;
+		
+		$img = imagecreatetruecolor($w, $h);
+		imageantialias($img, true);
+		imagefill($img, 0, 0, 0x000000);
+		//image_gradientrect2($img, 0, 0, $w, $h, (int)__('@graph_bg_start@'), (int)__('@graph_bg_end@'));
+		
+		$clouds = imagecreatefrompng(DOCROOT . '/images/clouds-png-13378.png');
+		imagesavealpha($clouds, TRUE);
+		imagecopyresampled($img, $clouds, 0, 0, 0, 0, $w, $h, imagesx($clouds), imagesy($clouds));
+		imagedestroy($clouds);
+		
+		imageline($img, $paddingLeft, $paddingTop, $paddingLeft, ($h - $paddingBottom), (int)__('@graph_frame_color@'));
+		imageline($img, $paddingLeft, ($h - $paddingBottom), ($w - $paddingRight + $spacing), ($h - $paddingBottom), (int)__('@graph_frame_color@'));
+		$points = array(
+			$paddingLeft - 5, $paddingTop,
+			($paddingLeft), $paddingTop - 10,
+			$paddingLeft + 5, $paddingTop
+		);
+		imagefilledpolygon($img, $points, 3, (int)__('@graph_frame_color@'));
+		$points = array(
+			(($w - $paddingRight + $spacing -3) + 10), ($h - $paddingBottom),
+			($w - $paddingRight + $spacing -3), (($h - $paddingBottom) - 5),
+			($w - $paddingRight + $spacing -3), ($h - $paddingBottom) + 5
+		);
+		imagefilledpolygon($img, $points, 3, (int)__('@graph_frame_color@'));
+
+		$rectColor = imagecolorallocatealpha($img, 74, 0, 6, 50);
+		$topEllipseColor = 0xa1020f;
+		$bottomEllipseColor = 0x590008;
+		
+		$dataSet = array();
+		
+		for ($i = 0; $i < $dataCnt; $i++) {
+			$dataSet['inc'][] = $data[$i]['inc'];
+			$dataSet['dec'][] = $data[$i]['dec'];
+			$dataSet['cnt'][] = $data[$i]['cnt'];
+			$dataSet['dat'][] = $data[$i]['date'];
+		}
+		$min = min($dataSet['inc']);
+		$max = max($dataSet['inc']);
+		
+		$labelsY = array();
+		$intervalYLines = ($h - ($paddingTop + $paddingBottom)) / ((int)__('@graph_y_lines_cnt@') -1);
+		$lineW = 10;
+		
+		for ($i = 0; $i < (int)__('@graph_y_lines_cnt@'); $i++) {
+			if ($i == 0) $lbl = $min;
+			if ($i == (int)__('@graph_y_lines_cnt@') -1) $lbl = $max;
+			if ($i >= 1 && $i <= ((int)__('@graph_y_lines_cnt@') -2)) 
+				$lbl = ($i * ($max - $min) / ((int)__('@graph_y_lines_cnt@') -1)) + $min;
+			if ($lbl < 1000) $lbl = sprintf('%.02f', $lbl); else $lbl = shortInt($lbl);
+			$labelsY[] = $lbl;
+		}
+		$labelsY = array_reverse($labelsY);
+
+		for ($i = 0; $i < (int)__('@graph_y_lines_cnt@'); $i++) {
+			$x1 = (int)($paddingLeft);
+			$x2 = (int)$x1 + $lineW;
+			$y1 = (int)($intervalYLines * $i) + $paddingTop;
+			$y2 = (int)$y1;
+			if ($i > 0) {
+				imageline($img, $x1, $y1, $x2, $y2, (int)__('@graph_frame_color@'));
+			}
+			$bbox = imagettfbbox((int)__('@graph_font_size@'), 0, __('@graph_font@'), $labelsY[$i]);
+			$textY = $y1 - (($bbox[5] + $bbox[3]) / 2);
+			$textX = ($x1 - ((int)__('@graph_font_size@') * 3)) - 20;	
+			imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, (int)__('@graph_text_color@'), __('@graph_font@'), $labelsY[$i]);
+		}		
+
+		for ($i = 0; $i < $dataCnt; $i++) {
+			$inc = $dataSet['inc'][$i];
+			$cnt = $dataSet['cnt'][$i];
+			$dec = $dataSet['dec'][$i];
+			$x = ($i * ($barW + $spacing)) + $paddingLeft + $spacing;
+			$y = map($inc, $min, $max, 45, ($h - ($paddingBottom + $paddingTop + ((int)__('@graph_font_size@')))));
+			barChart($img, $x, ($h - $y) - $paddingBottom + 5, $barW, $y, $rectColor, $topEllipseColor, $bottomEllipseColor);
+			$text = sprintf("%d (+%s/-%d)", $cnt, shortInt($inc), $dec);
+			
+			$textBbox = imagettfbbox(__('@graph_font_size@'), 0, __('@graph_font@'), $text);
+			$textW = $textBbox[0] - $textBbox[2];
+			$textX = ($x + (($textW / 2) + (((int)__('@bar_chart_bar_width@') - ($spacing / 2)) / 2))) +6;
+			$textY = ($h - ($paddingBottom) - $y) - (int)__('@graph_font_size@') ;
+			
+			imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, (int)__('@graph_text_color@'), __('@graph_font@'), $text);
+		}
+
+		$intervalX = ($w - ($paddingLeft + $paddingRight + (($barW + $spacing)))) / ($dataCnt - 1);
+		for ($i = 0; $i < $dataCnt; $i++) {
+			$textX = (($intervalX * $i)) + (($spacing + $barW) / 2) + $paddingLeft;//  (($barW / 2));
+			$textY = ($h - $paddingBottom) + ((int)__('@graph_font_size@') + 10);
+			$text = date('d.m', $dataSet['dat'][$i]);
+			
+			imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, (int)__('@graph_text_color@'), __('@graph_font@'), $text);
+		}
+		
+		if ($to_browser) {
+			header('Content-Type: image/png');
+			imagepng($img);
+		} else {
+			imagepng($img, DOCROOT . '/my_stats_graphs/' . $vkid . '.png');
+		}
+		imagedestroy($img);
+	}
+	
 	function getGodsStatGraph($to_browser=false) {
 		$img = imagecreatetruecolor((int)__('@graph_w@'), (int)__('@graph_h@'));
 		imageantialias($img, true);
 		image_gradientrect2($img, 0, 0, (int)__('@graph_w@'), (int)__('@graph_h@'), (int)__('@graph_bg_start@'), (int)__('@graph_bg_end@'));
 		
-		$paddingLeft = 60;
+		$clouds = imagecreatefrompng(DOCROOT . '/images/clouds-png-13378.png');
+		imagesavealpha($clouds, TRUE);
+		imagecopyresampled($img, $clouds, 0, 0, 0, 0, (int)__('@graph_w@'), (int)__('@graph_h@'), imagesx($clouds), imagesy($clouds));
+		imagedestroy($clouds);
+		
+		$paddingLeft = 70;
 		$paddingRight = 30;
 		$paddingBottom = 30;
 		$paddingTop = 40;
@@ -626,7 +775,7 @@
 			
 			image_legend($img, 90, 30, $legends);
 			
-			$allStats = WL_DB_getRows('dicks_stats', where: array(['vkid', 'IN', implode(',', $topIDS)]), calc_found_rows: false);
+			$allStats = WL_DB_getRows('dicks_stats', where: array(['vkid', 'IN', implode(',', $topIDS)]));
 			$allDataSet = array();
 			
 			if (!empty($allStats)) {
@@ -643,7 +792,11 @@
 					if ($i == (int)__('@graph_y_lines_cnt@') -1) $lbl = $max;
 					if ($i >= 1 && $i <= ((int)__('@graph_y_lines_cnt@') -2)) 
 						$lbl = ($i * ($max - $min) / ((int)__('@graph_y_lines_cnt@') -1)) + $min;
-					$lbl = sprintf('%.1f', $lbl);
+					if ($lbl < 1000) {
+						$lbl = sprintf('%.1f', $lbl);
+					} else {
+						$lbl = shortInt($lbl);
+					}
 					$labelsY[] = $lbl;
 				}
 				$labelsY = array_reverse($labelsY);
@@ -659,7 +812,7 @@
 					}
 					$bbox = imagettfbbox((int)__('@graph_font_size@'), 0, __('@graph_font@'), $labelsY[$i]);
 					$textY = $y1 - (($bbox[5] + $bbox[3]) / 2);
-					$textX = ($x1 - ((int)__('@graph_font_size@') * 3)) - 10;	
+					$textX = ($x1 - ((int)__('@graph_font_size@') * 3)) - 20;	
 					imagettftext($img, (int)__('@graph_font_size@'), 0, $textX, $textY, (int)__('@graph_text_color@'), __('@graph_font@'), $labelsY[$i]);
 				}
 				
@@ -965,6 +1118,32 @@
 		return $progressCollection[$x];
 	}
 
+	function addUser($userData) {
+		$usersTableFields = WL_DB_getTableFields('dicks');
+		$userDBFields = array();
+		$userID = $userData['id'];
+		
+		$userDBFields['vkid'] = $userID;
+		$userDBFields['sex'] = 'm';
+		$userDBFields['icon'] = mt_rand(1, 1047);
+		$userDBFields['len'] = __('@def_dick_len@');
+		$userDBFields['regdate'] = time();
+		$userDBFields['last_metr'] = time();
+		$userDBFields['metr_available'] = time();
+		$userDBFields['counter_min'] = __('@time_rnd_min@');
+		$userDBFields['counter_max'] = __('@time_rnd_max@');
+		$userDBFields['probabilities'] = json_encode(createProbabilities());
+		
+		foreach ($userData as $userDataK => $userDataV) {
+			if (in_array($userDataK, $usersTableFields) && $userDataK !== 'id') $userDBFields[$userDataK] = $userDataV;
+			if (preg_match('/^photo_(.*)$/siu', $userDataK, $found)) {
+				$size = $found[1];
+				file_put_contents(sprintf('%s/members/%s/%d.jpg', DOCROOT, $size, $userID), file_get_contents($userDataV));
+			}			
+		}
+		return WL_DB_Insert('dicks', $userDBFields);
+	}
+
 	function insertStat($vkid, $peer_id, $len, $val, $act) {
 		return WL_DB_Insert('dicks_stats', array(
 			'vkid' => $vkid,
@@ -1055,12 +1234,19 @@
 			$peer_id = 2000000000 + $i;
 			$peers = _vkApi_Call('messages.getConversationsById', array(
 				'peer_ids' => $peer_id
-			));
+			));			
 			if (isset($peers['items'][0]['peer'])) {
 				$item = $peers['items'][0];
+				
 				WL_DB_Insert('peers', array(
 					'peer_id' => $item['peer']['id'],
-					'title' => $item['chat_settings']['title']
+					'title' => $item['chat_settings']['title'],
+					'owner_id' => $item['chat_settings']['owner_id'],
+					'admin_ids' => isset($item['chat_settings']['admin_ids']) ? implode(',', $item['chat_settings']['admin_ids']) : NULL,
+					'members_count' => isset($item['chat_settings']['members_count']) ? $item['chat_settings']['members_count'] : NULL,
+					'photo_50' => isset($item['chat_settings']['photo']['photo_50']) ? $item['chat_settings']['photo']['photo_50'] : NULL,
+					'photo_100' => isset($item['chat_settings']['photo']['photo_100']) ? $item['chat_settings']['photo']['photo_100'] : NULL,
+					'photo_200' => isset($item['chat_settings']['photo']['photo_200']) ? $item['chat_settings']['photo']['photo_200'] : NULL
 				));
 				CRON_ReloadPeerUsers($peer_id);
 			}
@@ -1068,23 +1254,26 @@
 	}
 
 	function CRON_updateDicks() {
-		$dicks = WL_DB_GetDelimitedList('dicks', 'vkid');
-		$dicksUsers = _vkApi_Call('users.get', array(
-			'user_ids' => $dicks,
-			'fields' => 'photo_50,photo_100,photo_200'
-		));
-		for ($i = 0; $i < count($dicksUsers); $i++) {
-			WL_DB_Update('dicks', array(
-				'first_name' => $dicksUsers[$i]['first_name'],
-				'last_name' => $dicksUsers[$i]['last_name'],
-				'photo_50' => $dicksUsers[$i]['photo_50'],
-				'photo_100' => $dicksUsers[$i]['photo_100'],
-				'photo_200' => $dicksUsers[$i]['photo_200']
-			), array(['vkid', '=', $dicksUsers[$i]['id']]));
+		$users = WL_DB_GetDelimitedList('dicks', 'vkid');
+		$usersData = _vkApi_usersGet($users, fields: __('@vkapi_users_fields@'));
+		$usersTableFields = WL_DB_getTableFields('dicks');
+		
+		foreach ($usersData as $userData) {
+			$userDBFields = array();
 
-			file_put_contents(sprintf('%s/members/50/%d.jpg', DOCROOT, $dicksUsers[$i]['id']), file_get_contents($dicksUsers[$i]['photo_50']));
-			file_put_contents(sprintf('%s/members/100/%d.jpg', DOCROOT, $dicksUsers[$i]['id']), file_get_contents($dicksUsers[$i]['photo_100']));
-			file_put_contents(sprintf('%s/members/200/%d.jpg', DOCROOT, $dicksUsers[$i]['id']), file_get_contents($dicksUsers[$i]['photo_200']));
+			for ($i = 0; $i < count($usersTableFields); $i++) {
+				if (isset($userData[$usersTableFields[$i]]) && $usersTableFields[$i] !== 'id') $userDBFields[$usersTableFields[$i]] = $userData[$usersTableFields[$i]];
+			}
+
+			foreach ($userData as $userFieldK => $userFieldV) {
+				if (preg_match('/^photo_(.*)$/siu', $userFieldK, $found)) {
+					$size = $found[1];
+					file_put_contents(sprintf('%s/members/%s/%d.jpg', DOCROOT, $size, $userData['id']), file_get_contents($userFieldV));
+				}
+			}
+
+			WL_DB_Update('dicks', $userDBFields, array(['vkid', '=', $userData['id']]));			
+			$userDBFields = array();
 		}
 	}
 
