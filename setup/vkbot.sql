@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 15 2024 г., 08:46
+-- Время создания: Июн 23 2024 г., 01:27
 -- Версия сервера: 8.0.37-0ubuntu0.22.04.3
 -- Версия PHP: 8.1.2-1ubuntu2.17
 
@@ -32,6 +32,7 @@ CREATE TABLE `api_log` (
   `method` varchar(255) NOT NULL,
   `request_data` longtext,
   `response_data` longtext,
+  `status` varchar(255) DEFAULT NULL,
   `date` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -44,8 +45,22 @@ CREATE TABLE `api_log` (
 CREATE TABLE `dicks` (
   `id` int UNSIGNED NOT NULL,
   `vkid` int UNSIGNED NOT NULL,
+  `regdate` int DEFAULT NULL,
+  `screen_name` varchar(100) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
+  `first_name_nom` varchar(255) DEFAULT NULL,
+  `first_name_gen` varchar(255) DEFAULT NULL,
+  `first_name_dat` varchar(255) DEFAULT NULL,
+  `first_name_acc` varchar(255) DEFAULT NULL,
+  `first_name_ins` varchar(255) DEFAULT NULL,
+  `first_name_abl` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
+  `last_name_nom` varchar(100) DEFAULT NULL,
+  `last_name_gen` varchar(100) DEFAULT NULL,
+  `last_name_dat` varchar(100) DEFAULT NULL,
+  `last_name_acc` varchar(100) DEFAULT NULL,
+  `last_name_ins` varchar(100) DEFAULT NULL,
+  `last_name_abl` varchar(100) DEFAULT NULL,
   `nick_name` varchar(255) DEFAULT NULL,
   `sex` varchar(1) NOT NULL DEFAULT 'm',
   `icon` int UNSIGNED NOT NULL,
@@ -57,7 +72,13 @@ CREATE TABLE `dicks` (
   `photo_50` varchar(1000) DEFAULT NULL,
   `photo_100` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `photo_200` varchar(1000) DEFAULT NULL,
+  `photo_200_orig` varchar(1000) DEFAULT NULL,
+  `photo_400_orig` varchar(1000) DEFAULT NULL,
+  `photo_max` varchar(1000) DEFAULT NULL,
+  `photo_max_orig` varchar(1000) DEFAULT NULL,
   `probabilities` longtext,
+  `counter_min` int DEFAULT NULL,
+  `counter_max` int DEFAULT NULL,
   `lucky_try` varchar(10) NOT NULL DEFAULT 'false',
   `lucky_val` int UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -177,7 +198,7 @@ CREATE TABLE `globals` (
   `id` int UNSIGNED NOT NULL,
   `param` varchar(255) NOT NULL,
   `lparam` varchar(255) DEFAULT NULL,
-  `value` varchar(255) NOT NULL
+  `value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -195,11 +216,11 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (8, 'peer_probe_start', NULL, '1'),
 (9, 'peer_probe_end', NULL, '15'),
 (10, 'cron_work', NULL, 'false'),
-(11, 'vkapi_access_token', NULL, 'vk1.a.R_FDJAlI5GOW3pNpUsrQfVps-WndrsKs8-0PuMspbsEuKhb3fTlgOpd-lg4XStsYZS-qy4y4vECQzaazzHPJeUHEzLuSbjP-b1wu1lCQbr-Wd1Svk8BQCEJaFOnssbtz5sfdBlaSlkT654-E9X-wDptj_EYNaAcC_C7BaLCIaSSKRvhbIfWhPJfgjF-Gll_mobPJFXcBlxwG1NS4dH9PMQ'),
+(11, 'vkapi_access_token', NULL, ''),
 (12, 'vkapi_version', NULL, '5.131'),
-(13, 'vkapi_secret_key', NULL, 'kCFdl8UpZwGdvc5VbqXApf3qpeHicf2A'),
-(14, 'vkapi_confirmation_token', NULL, '140df6d5'),
-(15, 'admin_id', NULL, '220887949'),
+(13, 'vkapi_secret_key', NULL, ''),
+(14, 'vkapi_confirmation_token', NULL, ''),
+(15, 'admin_id', NULL, ''),
 (16, 'start_luck_cnt', NULL, '5'),
 (17, 'stat_graph_cnt', NULL, '40'),
 (18, 'graph_w', NULL, '1250'),
@@ -211,7 +232,7 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (24, 'graph_x_labels_cnt', NULL, '10'),
 (25, 'graph_y_lines_cnt', NULL, '10'),
 (26, 'graph_title_font_size', NULL, '60'),
-(27, 'graph_font', NULL, '/var/www/scyk.ru/html/ARIAL.TTF'),
+(27, 'graph_font', NULL, 'ARIAL.TTF'),
 (28, 'graph_font_size', NULL, '12'),
 (29, 'graph_text_color', NULL, '16777215'),
 (30, 'graph_line_color', NULL, '16711680'),
@@ -222,8 +243,8 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (35, 'small_dick_len', NULL, '30'),
 (36, 'stats_graph_font_size', NULL, '17'),
 (37, 'gods_cnt', NULL, '3'),
-(38, 'gods_graph_cnt', NULL, '30'),
-(39, 'bar_chart_bar_width', NULL, '45'),
+(38, 'gods_graph_cnt', NULL, '25'),
+(39, 'bar_chart_bar_width', NULL, '65'),
 (40, 'bar_chart_padding', NULL, '5'),
 (41, 'daily_bonus_rnd_min', NULL, '1'),
 (42, 'daily_bonus_rnd_max', NULL, '25'),
@@ -236,7 +257,12 @@ INSERT INTO `globals` (`id`, `param`, `lparam`, `value`) VALUES
 (49, 'lucky_rnd_min', NULL, '1'),
 (50, 'lucky_rnd_max', NULL, '59'),
 (51, 'inactive_users_seconds', NULL, '864000'),
-(52, 'vkapi_cron_acces_token', NULL, 'OWe2fzb3nUw_1sx1PqrNd3Y6H6fa2T3cJq7FoFc_Ryo7zFl_zD4YfcuJGQeluyh4o4xXoEaWuyQWKDWb_i7MixcFGAIEtUsS8Ec6Gy_m8ZAUikYoMw');
+(52, 'vkapi_cron_acces_token', NULL, ''),
+(53, 'msg_sep', NULL, '----------------------------------'),
+(54, 'bar_chart_limit_cnt', NULL, '13'),
+(55, 'sex_m', NULL, 'мужской'),
+(56, 'sex_f', NULL, 'женский'),
+(57, 'vkapi_users_fields', NULL, 'photo_50,photo_100,photo_200,photo_200_orig,photo_400_orig,photo_max,photo_max_orig,first_name_nom,first_name_gen,first_name_dat,first_name_acc,first_name_ins,first_name_abl,last_name_nom,last_name_gen,last_name_dat,last_name_acc,last_name_ins,last_name_abl,screen_name');
 
 -- --------------------------------------------------------
 
@@ -1327,7 +1353,13 @@ CREATE TABLE `messages` (
 CREATE TABLE `peers` (
   `id` int UNSIGNED NOT NULL,
   `peer_id` int UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL
+  `owner_id` int DEFAULT NULL,
+  `admin_ids` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `members_count` int DEFAULT NULL,
+  `photo_50` varchar(1000) DEFAULT NULL,
+  `photo_100` varchar(1000) DEFAULT NULL,
+  `photo_200` varchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -1479,7 +1511,8 @@ ALTER TABLE `messages`
 --
 ALTER TABLE `peers`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `peer_id` (`peer_id`);
+  ADD KEY `peer_id` (`peer_id`),
+  ADD KEY `owner_id` (`owner_id`);
 
 --
 -- Индексы таблицы `small_dick_names`
@@ -1532,7 +1565,7 @@ ALTER TABLE `dick_names`
 -- AUTO_INCREMENT для таблицы `globals`
 --
 ALTER TABLE `globals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT для таблицы `icons`

@@ -47,7 +47,18 @@
 		try {
 			$errors = array();
 			if (is_writable($docroot)) {				
-				$dirs = ['/logs', '/members/50', '/members/100', '/members/200', '/stats_graphs'];
+				$dirs = [
+					'/logs', 
+					'/members/50', 
+					'/members/100', 
+					'/members/200', 
+					'/members/200_orig', 
+					'/members/400_orig', 
+					'/members/max_orig', 
+					'/members/max', 
+					'/stats_graphs',
+					'/my_stats_graphs'
+				];
 				foreach ($dirs as $dir) {
 					$directory = $docroot . $dir;
 					if (!file_exists($directory)) {
