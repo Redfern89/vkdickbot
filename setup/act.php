@@ -29,7 +29,6 @@
 				'SQL_DB' => $mysql_db,
 			));
 			
-			echo $configFile;
 			file_put_contents('../config.php', $configFile);
 			
 			__redirect('/setup?step=dir');
