@@ -5,4 +5,5 @@
 confog.php
 test.php
 logs/*
+tmp/*
 t/*
