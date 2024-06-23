@@ -1,9 +1,6 @@
-*.jpg
-*.png
-*.jpeg
-*.sh
 confog.php
 test.php
+copy.sh
 logs/*
 tmp/*
 t/*
