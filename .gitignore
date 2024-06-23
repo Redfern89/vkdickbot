@@ -4,3 +4,4 @@ copy.sh
 logs/*
 tmp/*
 t/*
+my.cnf
