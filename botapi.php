@@ -697,7 +697,7 @@
 
 		$intervalX = ($w - ($paddingLeft + $paddingRight + (($barW + $spacing)))) / ($dataCnt - 1);
 		for ($i = 0; $i < $dataCnt; $i++) {
-			$textX = (($intervalX * $i)) + (($spacing + $barW) / 2) + $paddingLeft;//  (($barW / 2));
+			$textX = ((($intervalX * $i)) + (($spacing + $barW) / 2) + $paddingLeft) -5;//  (($barW / 2));
 			$textY = ($h - $paddingBottom) + ((int)__('@graph_font_size@') + 10);
 			$text = date('d.m', $dataSet['dat'][$i]);
 			
@@ -1222,7 +1222,7 @@
 					}
 				}
 			}
-		}		
+		}
 	}
 
 	function CRON_reloadPeers() {
