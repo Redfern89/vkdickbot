@@ -188,21 +188,17 @@
 		if (!empty($fields)) {
 			foreach($fields as $field => $value) {
 				$field = WL_DB_EscapeString($field);
-				$value = WL_DB_EscapeString($value);
-				
+
 				if (preg_match('/expr:/', $value)) {
 					preg_match('/expr:(.*)/', $value, $found);
 					if (isset($found[1])) {
 						$update_collection[] = '`' . WL_DB . "`.`$table`.`$field` = {$found[1]}";
 					}
 				} else {
-					if ($value != 'NULL') {
-						$update_collection[] = '`' . WL_DB . "`.`$table`.`$field` = '$value'";
-					} else {
-						$update_collection[] = '`' . WL_DB . "`.`$table`.`$field` = NULL";
-					}
-					
-					//if (is_integer($value)) $update_collection[] = sprintf('`%s`.`%s`.`%s` = %d', WL_DB, $table, $field, $value);
+					if (is_string($value)) $value = WL_DB_EscapeString($value);
+					if (is_integer($value)) $update_collection[] = sprintf('`%s`.`%s`.`%s` = %d', WL_DB, $table, $field, $value);
+					if (is_string($value) || $value === '0') $update_collection[] = sprintf('`%s`.`%s`.`%s` = \'%s\'', WL_DB, $table, $field, $value);
+					if (is_null($value)) $update_collection[] = sprintf('`%s`.`%s`.`%s` = NULL', WL_DB, $table, $field);
 				}
 			}
 		}

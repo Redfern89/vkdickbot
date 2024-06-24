@@ -436,19 +436,19 @@
 							$error = TRUE;
 						}
 
-						/*if ($id == __('@admin_id@') && !$error) {
+						if ($id == __('@admin_id@') && !$error) {
 							_vkApi_messages_Send($peer_id, load_tpl('admin_not_accept', array(
 								'USERNAME' => $userName
 							)));
 							$error = TRUE;
-						}*/
+						}
 
 						if (!$error) {
 							$myDick = getDick($from_id);
 							$donateDick = getDick($id);
-							$myDickLen = $myDick['len'];
-							$donateDickLen = $donateDick['len'];
-							if (!empty($donateDick['nick_name'])) $donateUserName = sprintf('[id%d|%s]', $donateDick['vkid'], $donateDick['nick_name']); 
+							$myDickLen = (int)$myDick['len'];
+							$donateDickLen = (int)$donateDick['len'];
+							if (!empty($donateDick['nick_name'])) $donateUserName = sprintf('[id%d|%s]', $donateDick['vkid'], $donateDick['nick_name']);
 							else $donateUserName = sprintf('[id%d|%s]', $donateDick['vkid'], $donateDick['first_name']);
 
 							$myDickLen -= $donateLen;
@@ -582,11 +582,11 @@
 						if (isset($cmd_found[1])) {
 							$act = $cmd_found[1];
 							$id = $cmd_found[2];
-							$val = $cmd_found[3];
+							$val = (int)$cmd_found[3];
 							$dick = getDick($id);
 
 							if (!empty($dick)) {
-								$dickLen = $dick['len'];
+								$dickLen = (int)$dick['len'];
 								if (!empty($dick['nick_name'])) $userName = sprintf('[id%d|%s]', $dick['vkid'], $dick['nick_name']);
 								else $userName = sprintf('[id%d|%s]', $dick['vkid'], $dick['first_name']);
 								$actions = array(
