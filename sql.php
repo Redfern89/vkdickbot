@@ -414,12 +414,12 @@
 		if (!empty($fields)) {
 			foreach($fields as $field => $value) {
 				$field = WL_DB_EscapeString($field);
-				$value = WL_DB_EscapeString($value);
-				
-				if (is_string($value) && !empty($value)) $rows_collection[] = sprintf('\'%s\'', $value);
+
+				if (is_string($value)) $value = WL_DB_EscapeString($value);
+				if (is_string($value) || $value === '0') $rows_collection[] = sprintf('\'%s\'', $value);
 				if (is_integer($value)) $rows_collection[] = $value;
 				if (is_null($value)) $rows_collection[] = 'NULL';
-				if (is_string($value) && empty($value)) $rows_collection[] = 'NULL';
+				//if (is_string($value) && empty($value)) $rows_collection[] = 'NULL';
 				
 				$fields_collection[] = "`$field`";
 			}
