@@ -418,7 +418,7 @@
 						}
 
 						if ($myDick['len'] < $donateLen && !$error) {
-							$userData = _vkApi_usersGet($id);
+							$userData = getDick($id);
 							_vkApi_messages_Send($peer_id, load_tpl('dick_donate_error_not_enough_length', array(
 								'USERNAME' => $userName,
 								'TO_USERNAME' => $userData['first_name'],
@@ -436,12 +436,12 @@
 							$error = TRUE;
 						}
 
-						if ($id == __('@admin_id@') && !$error) {
+						/*if ($id == __('@admin_id@') && !$error) {
 							_vkApi_messages_Send($peer_id, load_tpl('admin_not_accept', array(
 								'USERNAME' => $userName
 							)));
 							$error = TRUE;
-						}
+						}*/
 
 						if (!$error) {
 							$myDick = getDick($from_id);

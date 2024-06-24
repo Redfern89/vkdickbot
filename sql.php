@@ -201,6 +201,8 @@
 					} else {
 						$update_collection[] = '`' . WL_DB . "`.`$table`.`$field` = NULL";
 					}
+					
+					//if (is_integer($value)) $update_collection[] = sprintf('`%s`.`%s`.`%s` = %d', WL_DB, $table, $field, $value);
 				}
 			}
 		}
