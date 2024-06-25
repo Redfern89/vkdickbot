@@ -182,7 +182,7 @@
 					)));
 				}
 				
-				if (preg_match('/^резерв\s(добавить|взять)\s(\d+)$/siu', $cmd, $cmd_found) && $userExists) {
+				if (preg_match('/^резерв\s(добавить|взять)\s(-?\d+)$/siu', $cmd, $cmd_found) && $userExists) {
 					if (isset($cmd_found[1])) {
 						$reservedVal = (int)$cmd_found[2];
 						$action = $cmd_found[1];
@@ -190,6 +190,13 @@
 						$len = $dick['len'];
 						$reserved = $dick['reserved'];
 						$error = FALSE;
+						
+						if ($reservedVal < 1) {
+							$error = TRUE;
+							_vkApi_messages_Send($peer_id, load_tpl('error_reserved_value_less_than_one', array(
+								'USERNAME' => $userName
+							)));
+						}
 						
 						if ($action == 'добавить') {
 							if ($len < $reservedVal) {
@@ -310,6 +317,7 @@
 							
 							_vkApi_messages_Send($peer_id, load_tpl('whois_you', array(
 								'USERNAME' => $userName,
+								'ID' => $dick['vkid'],
 								'DATE' => date('d.m.Y', $dick['regdate']),
 								'COUNT' => WL_DB_getCount('dicks_stats', where: array(['vkid', '=', $from_id])),
 								'SEX' => __(sprintf('@sex_%s@', $dick['sex'])),
