@@ -87,7 +87,7 @@
 
 						insertStat($from_id, $peer_id, $len, $val, $act);
 						updateDickScores($from_id, $len, $target_time);
-						WL_DB_Update('dicks', array('lucky_try' => 'false', 'lucky_val' => mt_rand(1, 5)), array(['vkid', '=', $from_id]));
+						WL_DB_Update('dicks', array('lucky_try' => 'false', 'lucky_val' => mt_rand(1, 5), 'notify_send' => 'false'), array(['vkid', '=', $from_id]));
 
 						$dicksAll = WL_DB_GetArray('dicks', 'len');
 						$min = min($dicksAll);
@@ -388,6 +388,36 @@
 							'USERNAME' => $userName,
 							'DICKS_COLLECTION' => implode(PHP_EOL, $godsDicksCollection)
 						)), attachment: $photo, disable_mentions: TRUE);
+					}
+				}
+				
+				if (preg_match('/^(включить|выключить)\sуведомления$/siu', $cmd, $cmd_found) && $userExists) {
+					if (isset($cmd_found[1])) {
+						$notifyEnable = array(
+							'включить' => 'true',
+							'выключить' => 'false'
+						)[$cmd_found[1]];
+						
+						if ($notifyEnable == 'true') {
+							if (_vkApi_messages_isMessagesFromGroupAllowed(__('@vkapi_gid@'), $from_id)) {
+								_vkApi_messages_Send($peer_id, load_tpl('user_enable_notify', array(
+									'USERNAME' => $userName
+								)));
+								WL_DB_Update('dicks', array('enable_notify' => 'true', 'notify_send' => 'false'), array(['vkid', '=', $from_id]));
+							} else {
+								_vkApi_messages_Send($peer_id, load_tpl('error_user_not_accept_private_msg_from_group', array(
+									'USERNAME' => $userName
+								)));
+								WL_DB_Update('dicks', array('enable_notify' => 'false', 'notify_send' => 'false'), array(['vkid', '=', $from_id]));
+							}
+						}
+						
+						if ($notifyEnable == 'false') {
+							_vkApi_messages_Send($peer_id, load_tpl('user_disable_notify', array(
+								'USERNAME' => $userName
+							)));							
+							WL_DB_Update('dicks', array('enable_notify' => 'false', 'notify_send' => 'false'), array(['vkid', '=', $from_id]));
+						}
 					}
 				}
 
@@ -791,7 +821,7 @@
 					} else {
 						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
 							'USERNAME' => $userName
-						)));						
+						)));
 					}
 				}
 				

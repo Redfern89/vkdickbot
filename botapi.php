@@ -1133,6 +1133,7 @@
 		$userDBFields['counter_min'] = __('@time_rnd_min@');
 		$userDBFields['counter_max'] = __('@time_rnd_max@');
 		$userDBFields['probabilities'] = json_encode(createProbabilities());
+		$userDBFields['enable_notify'] = 'false';
 		
 		foreach ($userData as $userDataK => $userDataV) {
 			if (in_array($userDataK, $usersTableFields) && $userDataK !== 'id') $userDBFields[$userDataK] = $userDataV;

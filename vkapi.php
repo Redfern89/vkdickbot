@@ -92,4 +92,11 @@
 			'fields' => $fields
 		));
 	}
+
+	function _vkApi_messages_isMessagesFromGroupAllowed($group_id, $user_id) {
+		$result = _vkApi_Call('messages.isMessagesFromGroupAllowed', array('group_id' => $group_id, 'user_id' => $user_id));
+		if (isset($result['is_allowed'])) return $result['is_allowed'];
+		
+		return FALSE;
+	}
 ?>

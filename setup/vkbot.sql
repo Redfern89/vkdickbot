@@ -30,7 +30,7 @@ CREATE TABLE `api_log` (
   `status` varchar(255) DEFAULT NULL,
   `date` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9368 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -42,7 +42,7 @@ CREATE TABLE `api_log` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -93,7 +93,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -157,6 +157,8 @@ CREATE TABLE `dicks` (
   `counter_max` int DEFAULT NULL,
   `lucky_try` varchar(10) NOT NULL DEFAULT 'false',
   `lucky_val` int unsigned DEFAULT NULL,
+  `enable_notify` varchar(15) DEFAULT NULL,
+  `notify_send` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `vkid` (`vkid`),
   KEY `peer_id` (`peer_id`),
@@ -173,7 +175,7 @@ CREATE TABLE `dicks` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -208,7 +210,7 @@ CREATE TABLE `dicks_stats` (
   `act` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `peer_id` (`peer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1674 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1689 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -220,7 +222,7 @@ CREATE TABLE `dicks_stats` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -251,7 +253,7 @@ CREATE TABLE `globals` (
   `lparam` varchar(255) DEFAULT NULL,
   `value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,7 +262,7 @@ CREATE TABLE `globals` (
 
 LOCK TABLES `globals` WRITE;
 /*!40000 ALTER TABLE `globals` DISABLE KEYS */;
-INSERT INTO `globals` VALUES (1,'dick_len_rnd_min',NULL,'1'),(2,'dick_len_rnd_max',NULL,'20'),(3,'def_dick_len',NULL,'10'),(4,'time_rnd_min',NULL,'1'),(5,'time_rnd_max',NULL,'7200'),(6,'top_count',NULL,'10'),(7,'bonus_dick_len',NULL,'30'),(8,'peer_probe_start',NULL,'1'),(9,'peer_probe_end',NULL,'15'),(10,'cron_work',NULL,'false'),(11,'vkapi_access_token',NULL,''),(12,'vkapi_version',NULL,'5.131'),(13,'vkapi_secret_key',NULL,''),(14,'vkapi_confirmation_token',NULL,'f0568a03'),(15,'admin_id',NULL,''),(16,'start_luck_cnt',NULL,'5'),(17,'stat_graph_cnt',NULL,'40'),(18,'graph_w',NULL,'1250'),(19,'graph_h',NULL,'671'),(20,'graph_bg_start',NULL,'3014929'),(21,'graph_bg_end',NULL,'0'),(22,'graph_frame_color',NULL,'8224125'),(23,'graph_x_lines_cnt',NULL,'30'),(24,'graph_x_labels_cnt',NULL,'10'),(25,'graph_y_lines_cnt',NULL,'10'),(26,'graph_title_font_size',NULL,'60'),(27,'graph_font',NULL,'ARIAL.TTF'),(28,'graph_font_size',NULL,'12'),(29,'graph_text_color',NULL,'16777215'),(30,'graph_line_color',NULL,'16711680'),(31,'bot_cmd',NULL,'!метр'),(32,'photo_top_count',NULL,'5'),(33,'photo_top_font_size',NULL,'12'),(34,'photo_top_size',NULL,'100'),(35,'small_dick_len',NULL,'30'),(36,'stats_graph_font_size',NULL,'17'),(37,'gods_cnt',NULL,'3'),(38,'gods_graph_cnt',NULL,'25'),(39,'bar_chart_bar_width',NULL,'65'),(40,'bar_chart_padding',NULL,'5'),(41,'daily_bonus_rnd_min',NULL,'1'),(42,'daily_bonus_rnd_max',NULL,'25'),(43,'god_dick_len',NULL,'50'),(44,'DEF_PROBABILITY_PERC_inc','inc','78'),(45,'DEF_PROBABILITY_PERC_dec','dec','17'),(46,'DEF_PROBABILITY_PERC_equ','equ','3'),(47,'DEF_PROBABILITY_PERC_die','die','1'),(48,'DEF_PROBABILITY_PERC_bon','bon','1'),(49,'lucky_rnd_min',NULL,'1'),(50,'lucky_rnd_max',NULL,'59'),(51,'inactive_users_seconds',NULL,'864000'),(52,'vkapi_cron_acces_token',NULL,''),(53,'msg_sep',NULL,'----------------------------------'),(54,'bar_chart_limit_cnt',NULL,'13'),(55,'sex_m',NULL,'мужской'),(56,'sex_f',NULL,'женский'),(57,'vkapi_users_fields',NULL,'photo_50,photo_100,photo_200,photo_200_orig,photo_400_orig,photo_max,photo_max_orig,first_name_nom,first_name_gen,first_name_dat,first_name_acc,first_name_ins,first_name_abl,last_name_nom,last_name_gen,last_name_dat,last_name_acc,last_name_ins,last_name_abl,screen_name');
+INSERT INTO `globals` VALUES (1,'dick_len_rnd_min',NULL,'1'),(2,'dick_len_rnd_max',NULL,'20'),(3,'def_dick_len',NULL,'10'),(4,'time_rnd_min',NULL,'1'),(5,'time_rnd_max',NULL,'7200'),(6,'top_count',NULL,'10'),(7,'bonus_dick_len',NULL,'30'),(8,'peer_probe_start',NULL,'1'),(9,'peer_probe_end',NULL,'15'),(10,'cron_work',NULL,'false'),(11,'vkapi_access_token',NULL,''),(12,'vkapi_version',NULL,'5.131'),(13,'vkapi_secret_key',NULL,''),(14,'vkapi_confirmation_token',NULL,'f0568a03'),(15,'admin_id',NULL,''),(16,'start_luck_cnt',NULL,'5'),(17,'stat_graph_cnt',NULL,'40'),(18,'graph_w',NULL,'1250'),(19,'graph_h',NULL,'671'),(20,'graph_bg_start',NULL,'3014929'),(21,'graph_bg_end',NULL,'0'),(22,'graph_frame_color',NULL,'8224125'),(23,'graph_x_lines_cnt',NULL,'30'),(24,'graph_x_labels_cnt',NULL,'10'),(25,'graph_y_lines_cnt',NULL,'10'),(26,'graph_title_font_size',NULL,'60'),(27,'graph_font',NULL,'ARIAL.TTF'),(28,'graph_font_size',NULL,'12'),(29,'graph_text_color',NULL,'16777215'),(30,'graph_line_color',NULL,'16711680'),(31,'bot_cmd',NULL,'!метр'),(32,'photo_top_count',NULL,'5'),(33,'photo_top_font_size',NULL,'12'),(34,'photo_top_size',NULL,'100'),(35,'small_dick_len',NULL,'30'),(36,'stats_graph_font_size',NULL,'17'),(37,'gods_cnt',NULL,'3'),(38,'gods_graph_cnt',NULL,'25'),(39,'bar_chart_bar_width',NULL,'65'),(40,'bar_chart_padding',NULL,'5'),(41,'daily_bonus_rnd_min',NULL,'1'),(42,'daily_bonus_rnd_max',NULL,'25'),(43,'god_dick_len',NULL,'50'),(44,'DEF_PROBABILITY_PERC_inc','inc','78'),(45,'DEF_PROBABILITY_PERC_dec','dec','17'),(46,'DEF_PROBABILITY_PERC_equ','equ','3'),(47,'DEF_PROBABILITY_PERC_die','die','1'),(48,'DEF_PROBABILITY_PERC_bon','bon','1'),(49,'lucky_rnd_min',NULL,'1'),(50,'lucky_rnd_max',NULL,'59'),(51,'inactive_users_seconds',NULL,'864000'),(52,'vkapi_cron_acces_token',NULL,''),(53,'msg_sep',NULL,'----------------------------------'),(54,'bar_chart_limit_cnt',NULL,'13'),(55,'sex_m',NULL,'мужской'),(56,'sex_f',NULL,'женский'),(57,'vkapi_users_fields',NULL,'photo_50,photo_100,photo_200,photo_200_orig,photo_400_orig,photo_max,photo_max_orig,first_name_nom,first_name_gen,first_name_dat,first_name_acc,first_name_ins,first_name_abl,last_name_nom,last_name_gen,last_name_dat,last_name_acc,last_name_ins,last_name_abl,screen_name'),(58,'vkapi_gid',NULL,'191539110');
 /*!40000 ALTER TABLE `globals` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -273,7 +275,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -324,7 +326,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -361,7 +363,7 @@ CREATE TABLE `messages` (
   KEY `msg_id` (`msg_id`),
   KEY `peer_id` (`peer_id`),
   KEY `from_id` (`from_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3582 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3655 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -373,7 +375,7 @@ CREATE TABLE `messages` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -423,7 +425,7 @@ CREATE TABLE `peers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -465,7 +467,7 @@ CREATE TABLE `users_peers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -516,4 +518,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-25  5:21:30
+-- Dump completed on 2024-06-26  2:25:19
