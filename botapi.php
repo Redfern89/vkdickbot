@@ -1303,6 +1303,18 @@
 					$template = str_replace('%[' . $found[1][$i] . ']%', $var, $template);
 				}				
 			}
+			
+			preg_match_all('/%\((.*?)\)%/siu', $template, $found);
+			if (isset($found[1])) {
+				for ($i = 0; $i < count($found[1]); $i++) {
+					$tableField = explode('.', $found[1][$i]);
+					if (isset($tableField[0]) && isset($tableField[1])) {
+						$var = WL_DB_getField($tableField[0], $tableField[1], order: array(['rand', 'id']));
+						$template = str_replace('%(' . $found[1][$i] . ')%', $var, $template);
+					}
+				}
+			}
+			
 			$template = preg_replace('/\%\{.*?\}\%/', '', $template);
 		} else {
 			die ("Template $tpl.tpl not found");

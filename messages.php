@@ -11,7 +11,6 @@
 		$userExists = WL_DB_RowExists('dicks', 'vkid', $from_id);
 		$privateMessage = ($peer_id == $from_id) ? TRUE : FALSE;
 		$measureActionCommands = ['измерить', 'измерь', 'померить', 'померь'];
-		$statActionCommands = ['стата', 'стат', 'статистика'];
 		$helpCommands = ['?', 'помощь', 'помоги'];
 		
 		WL_DB_Insert('messages', array(
@@ -55,16 +54,6 @@
 					$counter_min = $dick['counter_min'];
 					$counter_max = $dick['counter_max'];
 					$probabilities = json_decode($dick['probabilities'], TRUE);
-
-					if ($sex == 'm') {
-						if ($len >= __('@small_dick_len@')) {
-							$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
-						} else {
-							$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
-						}
-					} else if ($sex == 'f') {
-						$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
-					}
 
 					if ($current_time >= $metr_available) {
 						$act = probabilityRandom2($probabilities);
@@ -116,7 +105,6 @@
 						
 						$msg = load_tpl(sprintf('%s_dick_action_%s', $sex, $act), array(
 							'USERNAME' => $userName,
-							'DICKNAME' => $dickName,
 							'CM' => getMetr($val),
 							'CM2' => getMetr($val_save),
 							'LEN' => getMetr($len),
@@ -140,7 +128,6 @@
 
 						_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_dick_not_ready', $sex), array(
 							'USERNAME' => $userName,
-							'DICKNAME' => $dickName,
 							'TIME_LEFT' => getTime($time_left),
 							'PROGRESS' => getTextProgress($diff_time, 0, $target_time),
 							'PERC' => $perc,
@@ -280,7 +267,7 @@
 					}
 				}
 
-				if (in_array(mb_strtolower($cmd), $statActionCommands)) {
+				if ($cmd == 'стата') {
 					getDickStatGraph($from_id);
 					$file = DOCROOT . '/stats_graphs/' . $from_id . '.png';
 					if (file_exists($file)) {
@@ -522,19 +509,9 @@
 						} else {
 							$sex = $dick['sex'];
 							$len = $dick['len'];
-							if ($sex == 'm') {
-								if ($len >= __('@small_dick_len@')) {
-									$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
-								} else {
-									$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
-								}
-							} else if ($sex == 'f') {
-								$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
-							}
 							
 							_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_time_to_ready', $sex), array(
 								'USERNAME' => $userName,
-								'DICKNAME' => $dickName
 							)));
 						}
 						
@@ -609,15 +586,9 @@
 								insertStat($id, $peer_id, $dickLen, $val, $act);
 								updateDickLen($id, $dickLen);
 								
-								if ($dickLen >= __('@small_dick_len@')) {
-									$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
-								} else {
-									$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
-								}
 								
 								_vkApi_messages_Send($peer_id, load_tpl(sprintf('dick_%s_by_admin', $act), array(
 									'USERNAME' => $userName,
-									'DICKNAME' => $dickName,
 									'CM' => getMetr($val),
 									'LEN' => getMetr($dickLen)
 								)));
@@ -806,23 +777,12 @@
 						
 						if (!empty($dick['nick_name'])) $userName = sprintf('[id%d|%s]', $id, $dick['nick_name']);
 						else $userName = sprintf('[id%d|%s]', $id, $dick['first_name']);
-						
-						if ($sex == 'm') {
-							if ($len >= __('@small_dick_len@')) {
-								$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
-							} else {
-								$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
-							}
-						} else if ($sex == 'f') {
-							$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
-						}
 
 						updateDickLen($id, $len);
 						insertStat($id, $peer_id, $len, $val, 'rndinc');						
 						
 						_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_admin_bonus_rnd', $sex), array(
 							'USERNAME' => $userName,
-							'DICKNAME' => $dickName,
 							'VAL' => getMetr($val),
 							'LEN' => getMetr($len)
 						)));
@@ -856,23 +816,12 @@
 						$sex = $dick['sex'];
 						$len = $dick['len'];
 						$chance = isset($payload['chance']) ? $payload['chance'] : 1;
-
-						if ($sex == 'm') {
-							if ($len >= __('@small_dick_len@')) {
-								$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
-							} else {
-								$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
-							}
-						} else if ($sex == 'f') {
-							$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
-						}
 						
 						if ($dick['lucky_try'] == 'false') {
 							if ($dick['lucky_val'] == $chance) {
 								$len += (int)__('@god_dick_len@');
 								_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_chance_win', $sex), array(
 									'USERNAME' => $userName,
-									'DICKNAME' => $dickName,
 									'LEN' => getMetr($len),
 									'CM' => getMetr((int)__('@god_dick_len@'))
 								)));
@@ -881,7 +830,6 @@
 							} else {
 								_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_chance_fail', $sex), array(
 									'USERNAME' => $userName,
-									'DICKNAME' => $dickName,
 									'LEN' => getMetr($len),
 									'CM' => getMetr((int)__('@god_dick_len@'))
 								)));							
@@ -915,16 +863,6 @@
 						$sex = $dick['sex'];
 						$len = $dick['len'];
 
-						if ($sex == 'm') {
-							if ($len >= __('@small_dick_len@')) {
-								$dickName = WL_DB_getField('dick_names', 'name', order: array(['rand', 'id']));
-							} else {
-								$dickName = WL_DB_getField('small_dick_names', 'name', order: array(['rand', 'id']));
-							}
-						} else if ($sex == 'f') {
-							$dickName = WL_DB_getField('vagina_names', 'name', order: array(['rand', 'id']));
-						}
-
 						$metr_available = $dick['metr_available'];
 						$last_metr = $dick['last_metr'];
 
@@ -937,7 +875,6 @@
 								_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_lucky_try_rnd_win', $sex), array(
 									'USERNAME' => $userName,
 									'RND_VAL' => $lucky_value,
-									'DICKNAME' => $dickName,
 									'VAL' => getMetr((int)__('@god_dick_len@')),
 									'LEN' => getMetr($len),
 									'TIME_LEFT' => getTime($diff_time)
@@ -948,7 +885,6 @@
 								_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_lucky_try_rnd_fail', $sex), array(
 									'USERNAME' => $userName,
 									'RND_VAL' => $lucky_value,
-									'DICKNAME' => $dickName,
 									'TIME_LEFT' => getTime($diff_time)
 								)));
 							}

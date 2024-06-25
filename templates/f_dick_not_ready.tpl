@@ -1,4 +1,4 @@
-%{USERNAME}%, ❌твоя %{DICKNAME}% еще не готова к %[росту|процветанию|экспансии]%, попробуй через %{TIME_LEFT}%
+%{USERNAME}%, ❌твоя %(vagina_names.name)% еще не готова к %[росту|процветанию|экспансии]%, попробуй через %{TIME_LEFT}%
 
 Time to Ready: %{PROGRESS}% %{PERC}%%
 @{msg_sep}@
