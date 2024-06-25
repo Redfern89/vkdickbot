@@ -572,6 +572,8 @@
 
 							if (!empty($dick)) {
 								$dickLen = (int)$dick['len'];
+								$sex = $dick['sex'];
+								
 								if (!empty($dick['nick_name'])) $userName = sprintf('[id%d|%s]', $dick['vkid'], $dick['nick_name']);
 								else $userName = sprintf('[id%d|%s]', $dick['vkid'], $dick['first_name']);
 								$actions = array(
@@ -587,7 +589,7 @@
 								updateDickLen($id, $dickLen);
 								
 								
-								_vkApi_messages_Send($peer_id, load_tpl(sprintf('dick_%s_by_admin', $act), array(
+								_vkApi_messages_Send($peer_id, load_tpl(sprintf('%s_dick_%s_by_admin', $act), array(
 									'USERNAME' => $userName,
 									'CM' => getMetr($val),
 									'LEN' => getMetr($dickLen)
