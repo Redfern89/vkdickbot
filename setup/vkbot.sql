@@ -30,7 +30,7 @@ CREATE TABLE `api_log` (
   `status` varchar(255) DEFAULT NULL,
   `date` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15059 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15122 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -42,7 +42,7 @@ CREATE TABLE `api_log` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:30
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -93,7 +93,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -175,7 +175,7 @@ CREATE TABLE `dicks` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -210,7 +210,7 @@ CREATE TABLE `dicks_stats` (
   `act` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `peer_id` (`peer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1762 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1768 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -222,7 +222,7 @@ CREATE TABLE `dicks_stats` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -275,7 +275,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -326,7 +326,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -363,7 +363,7 @@ CREATE TABLE `messages` (
   KEY `msg_id` (`msg_id`),
   KEY `peer_id` (`peer_id`),
   KEY `from_id` (`from_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3882 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3895 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -375,7 +375,7 @@ CREATE TABLE `messages` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -425,7 +425,7 @@ CREATE TABLE `peers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -467,7 +467,7 @@ CREATE TABLE `users_peers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
@@ -518,4 +518,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28  9:28:31
+-- Dump completed on 2024-06-28 12:42:15

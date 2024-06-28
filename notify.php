@@ -1,9 +1,10 @@
 <?php
 	if (php_sapi_name() !== 'cli') die("Ты избрал не тот путь");
-	if (!checkInternetConnection()) die('No internet');
 	
 	define ('DOCROOT', realpath(__DIR__));
 	require_once DOCROOT . '/bootstrap.php';
+
+	if (!checkInternetConnection()) die('No internet');
 
 	$notifyIDs = WL_DB_GetDelimitedList('dicks', 'vkid', where: array(['enable_notify', '=', 'true'], ['notify_send', '=', 'false'], ['metr_available', '<=', time()]));
 	_vkApi_messages_Send($notifyIDs, load_tpl('notify'));
