@@ -74,6 +74,17 @@
 
 		return (!empty($result)) ? $result : false;		
 	}
+	
+	function checkInternetConnection() {
+		$ch = @fsockopen('www.google.com', 80);
+		
+		if ($ch) {
+			fclose($ch);
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 
 	// Функция генерации случайного числа от 0 до 4294967295
 	function random_uint32_t() {
