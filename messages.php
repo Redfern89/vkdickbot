@@ -825,6 +825,21 @@
 					}
 				}
 				
+				if ($cmd == 'удалить себя') {
+					if ($from_id == __('@admin_id@')) {
+						/*$result = _vkApi_Call('messages.removeChatUser', array(
+							'chat_id' => (string)((int)$peer_id - 2000000000),
+							'member_id' => __('@vkapi_gid_signed@')
+						));*/
+						
+						
+						//_vkApi_messages_Send($peer_id, (string)((int)$peer_id - 2000000000));//json_encode($result));
+					} else {
+						_vkApi_messages_Send($peer_id, load_tpl('admin_cmd_fail', array(
+							'USERNAME' => $userName
+						)));						
+					}
+				}
 				
 			} // END OF cmd_found
 		} // END of is command
