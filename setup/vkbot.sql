@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,7 +30,7 @@ CREATE TABLE `api_log` (
   `status` varchar(255) DEFAULT NULL,
   `date` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=129704 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=310978 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -42,12 +42,12 @@ CREATE TABLE `api_log` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -93,12 +93,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -175,12 +175,12 @@ CREATE TABLE `dicks` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -210,7 +210,7 @@ CREATE TABLE `dicks_stats` (
   `act` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `peer_id` (`peer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2098 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2425 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -222,12 +222,12 @@ CREATE TABLE `dicks_stats` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -275,12 +275,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -326,12 +326,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:28
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -363,7 +363,7 @@ CREATE TABLE `messages` (
   KEY `msg_id` (`msg_id`),
   KEY `peer_id` (`peer_id`),
   KEY `from_id` (`from_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9886 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -375,12 +375,12 @@ CREATE TABLE `messages` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -425,12 +425,12 @@ CREATE TABLE `peers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -467,12 +467,12 @@ CREATE TABLE `users_peers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:27
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- Dump completed on 2024-11-28 22:24:23
+-- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
 --
 -- Host: localhost    Database: vkbot
 -- ------------------------------------------------------
--- Server version	8.0.39-0ubuntu0.22.04.1
+-- Server version	8.0.40-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -518,4 +518,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 18:40:28
+-- Dump completed on 2024-11-28 22:24:23
